@@ -3,19 +3,407 @@
 
 <head>
     {{>header}}
-    <link rel="stylesheet" href="css/productDetails.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&display=swap');
+
+        @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Urbanist', sans-serif;
+        }
+
+        html {
+            font-size: 62.5%;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Lexend Deca', sans-serif;
+        }
+
+        h1 {
+            font-size: 4.8rem;
+        }
+
+        h2 {
+            font-size: 3rem;
+        }
+
+        p {
+            letter-spacing: 0.08rem;
+            font-size: 1.3rem;
+        }
+
+        .welcome>p {
+            margin: auto;
+        }
+
+        .welcome {
+            color: white;
+            height: 4vh;
+            display: flex;
+            justify-content: center;
+            /* align-content: center; */
+            background-color: #212a2f;
+
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .left-nav,
+        .logo,
+        .right-nav {
+            flex: 1;
+        }
+
+        .left-nav {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+        }
+
+        .right-nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .right-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        .right-nav ul li {
+            display: inline-block;
+        }
+
+        .nav-link {
+            font-size: 1.6rem;
+            font-weight: bold;
+
+        }
+
+
+        .fa-solid {
+            margin-top: 7px;
+            margin-right: 1.5rem;
+            margin-bottom: 2px;
+            margin-left: 2px;
+            font-size: 1.6rem;
+            color: black;
+        }
+
+        .fa-solid:hover {
+            color: grey;
+        }
+
+        .logo>a {
+            font-family: "Playwrite NZ", cursive;
+            font-optical-sizing: auto;
+            font-weight: bold;
+            font-style: normal;
+            font-size: 1.6rem;
+        }
+
+        .row,
+        .carousel-inner {
+            height: fit-content;
+            max-height: 55vh
+        }
+
+        .col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .d-md-block {
+            background-color: blanchedalmond;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .d-md-block>h2 {
+            padding-top: 45%;
+
+        }
+
+        .d-md-block>h2,
+        .d-md-block>p {
+            font-family: "Playwrite US Trad", cursive;
+            font-optical-sizing: auto;
+            padding-left: 15%;
+        }
+
+        .product-heading,
+        .latest-products-heading {
+            padding: 5rem 2rem 2rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-heading>h2,
+        .latest-products-heading>h1 {
+            width: fit-content;
+            color: grey;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .latest-card {
+            flex: 1;
+            /* Equal flex distribution */
+            position: relative;
+            display: inline-block;
+        }
+
+        .latest-card>img {
+            max-width: 100%;
+            max-height: 50vh;
+            min-height: 100%;
+            display: block;
+            transition: opacity 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .flex-container {
+                flex-direction: column;
+            }
+
+            .latest-card {
+                margin: 0 auto 20px;
+            }
+
+            .latest-products-heading>h1 {
+                font-size: 2.4rem;
+            }
+        }
+
+        .latest-card .centered-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .latest-card:hover img {
+            opacity: 0.5;
+        }
+
+        .latest-card:hover .centered-btn {
+            opacity: 1;
+        }
+
+        .centered-btn {
+            padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+            font-size: 1.8rem;
+            border-radius: 8px;
+            background-color: #212a2f;
+        }
+
+
+
+
+        .footer {
+            height: fit-content;
+            display: flex;
+            background-color: #212a2f;
+            justify-content: space-between;
+            padding-top: 8rem;
+            padding-bottom: 8rem;
+
+        }
+
+        #first-footer>h2 {
+            font-family: "Playwrite NZ", cursive;
+            margin-bottom: 2rem;
+        }
+
+        .footer-box {
+            flex: 1;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding-top: 8rem;
+            padding-right: 5rem;
+            padding-left: 5rem;
+
+        }
+
+        .footer-box>h2 {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                flex-direction: column;
+                height: fit-content;
+            }
+
+            #second-footer,
+            #first-footer {
+                display: none;
+            }
+        }
+
+        .top-categories>a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.6rem;
+        }
+
+        #second-footer>ul>li {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            list-style-type: none;
+        }
+
+        .top-categories>a:hover {
+            color: grey;
+        }
+
+
+        .makeup-content,
+        .hair-content,
+        .skincare-content {
+            background-color: #212a2f;
+            padding: 2rem 2rem 2rem 2rem;
+        }
+
+        .item {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .item>a {
+            text-decoration: none;
+            font-size: 1.6rem;
+            color: white;
+        }
+
+        .item>a:hover {
+            color: grey;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .product-info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .product-info-container>div {
+            flex: 1;
+            min-width: 300px;
+            box-sizing: border-box;
+            padding-top: 5rem;
+            padding-left: 10rem;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .product-info-image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .product-info-price {
+            color: red;
+        }
+
+        .product-info-quantity {
+            display: flex;
+            margin-top: 10px;
+
+        }
+
+        .product-info-quantity button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .product-info-quantity input {
+            width: 50px;
+            text-align: center;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+
+        .color-container {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .color-container label {
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+
+        .fa-regular {
+            font-size: 1.5rem;
+        }
+
+        .color-container label input {
+            padding-top: 24px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .product-info-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
 <body>
     {{>navbar}}
     <div class="product-info-container">
         <div class="product-info-image">
-            <img src="https://image-optimizer-reg.production.sephora-asia.net/images/product_images/zoom_1_Product_5060542727532-Charlotte-Tilbury-Airbrush-Flawless-Setting-Spray-100ml_bce670c7051d2f6614bb603f0f4c68053101de36_1601914361.png"
-                alt="Image Unavailable">
+            <img src="{{product.imageUrl}}" alt="Image Unavailable">
         </div>
         <div class="product-details">
-            <h2 class="product-info-heading">{{name}}title</h2>
-            <h3 class="product-info-price">{{price}}price</h3>
+            <h2 class="product-info-heading">{{product.name}}</h2>
+            <h3 class="product-info-price">Rs. {{product.price}}</h3>
             <div class="product-info-rating">
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
@@ -28,17 +416,7 @@
                 <input type="number" id="quantity" value="1" min="1" readonly>
                 <button id="increase">+</button>
             </div>
-            <div class="color-container">
-                <label>
-                    <input type="radio" name="color" value="red" checked> Red
-                </label>
-                <label>
-                    <input type="radio" name="color" value="blue"> Blue
-                </label>
-                <label>
-                    <input type="radio" name="color" value="green"> Green
-                </label>
-            </div>
+
         </div>
     </div>
 

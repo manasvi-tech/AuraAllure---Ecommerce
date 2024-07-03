@@ -1,0 +1,12 @@
+.account-container{
+    min-height: 90vh;
+    display: flex;
+}
+
+.collapse-container{
+    flex:1;
+    background-color: blanchedalmond;
+}
+.details-container{
+    flex:3
+}

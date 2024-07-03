@@ -12,15 +12,15 @@
     </div>
     {{>navbar}}
 
-    
+
     <div class="container">
         <div class="row">
             <!-- Left Div -->
             <div class="col-md-4 d-none d-md-block">
-                
-                    <!-- Content for the left div -->
-                    <h2>Sale Upto 40%</h2>
-                    <p>Live till 12th July</p>
+
+                <!-- Content for the left div -->
+                <h2>Sale Upto 40%</h2>
+                <p>Live till 12th July</p>
             </div>
             <!-- Carousel -->
             <div class="col-md-8 col-12 p-0">
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    
+
 
     <div class="latest-products">
         <div class="latest-products-heading">
@@ -91,22 +91,24 @@
         <h2>Our Latest Releases</h2>
     </div>
 
+
     <div class="product-release-container" style="display: flex;
     flex-wrap:wrap; justify-content:center;align-items:center max-width:100vw;height:fit-content @media (max-width:786px) {
     .search-products{
         padding: 5px 2px 5px 2px;
         width: 100vw;
     }
-}   " >
-        {{>card}}
-        {{>card}}
-        {{>card}}
-        {{>card}}
-        {{>card}}
-        {{>card}}
+}   ">
+        {{#each products}}
+        {{>card this}}
+        {{/each}}
+        </div>
+        
+
     </div>
 
-        <h3 style="text-align: center; "><a style="text-decoration: none; color:black"  href="/products">All Products <i class="fa-solid fa-arrow-right"></i></a></h3>
+    <h3 style="text-align: center; "><a style="text-decoration: none; color:black" href="/products">All Products <i
+                class="fa-solid fa-arrow-right"></i></a></h3>
 
     </div>
 
@@ -118,7 +120,7 @@
 
     <script>
         const component1 = document.querySelector('.let-div');
-        const component2 = doucument.querySelector('.carousel-inner');
+        const component2 = document.querySelector('.carousel-inner');
 
         function checkHeights() {
             const height1 = component1.clientHeight;

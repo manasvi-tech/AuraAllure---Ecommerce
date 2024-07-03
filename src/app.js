@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
+// const exphbs = require('express-handlebars');
 const port = process.env.PORT;
 const path = require('path');
 const hbs = require('hbs');
@@ -21,26 +22,29 @@ const partialsPath = path.join(__dirname, "../templates/partials");
 
 app.use(express.static(staticPath));
 app.set("view engine", "hbs");
+
 app.set("views", templatePath);
 hbs.registerPartials(partialsPath);
 
 
-const getData = async(limit) => {
-    try{
-        const products = await Product.find().limit(limit);
-        console.log(products.length)
-        // return product
-    }
-    catch(err){
-        console.log(err);
-    }
+// Register the custom helper
+hbs.registerHelper('range', function(from, to, incr, block) {
+    var accum = '';
+    for(var i = from; i <= to; i += incr)
+        accum += block.fn(i);
+    return accum;
+});
 
-}
+hbs.registerHelper('lte', function(v1, v2) {
+    return v1 <= v2;
+});
 
-
-app.get('/', (req, res) => {
-    getData(6);
-    res.render("index");
+app.get('/', async (req, res) => {
+    const products = await Product.find().limit(6);
+    console.log(products);
+    res.render('index',{
+        products:products
+    })
 })
 
 app.get('/account-details', auth, (req, res) => {
@@ -55,8 +59,21 @@ app.get('/products', (req, res) => {
     res.status(200).render('products');
 })
 
-app.get('/productDetails', (req, res) => {
-    res.status(200).render('productDetails')
+app.get('/productDetails/:id', async (req,res)=>{
+    try{
+        const id = req.params.id;
+        const product = await Product.findOne({id:id});
+
+        if(!product){
+            res.status(404).send('Product not found')
+        }
+
+        res.render('productDetails',{
+            product:product
+        })
+    } catch(err){
+        res.status(400).send(err);
+    }
 })
 
 app.post('/query', async (req, res) => {
