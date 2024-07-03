@@ -1,0 +1,168 @@
+<style>
+    .makeup-content,
+    .skincare-content,
+    .hair-content {
+        display: none;
+    }
+
+    .makeup-content.active,
+    .hair-content.active,
+    .skincare-content.active {
+        display: block;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" style="width: 9rem;">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/" style="margin-right: 4px;">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active makeup-link" href="#" style="margin-right: 4px;">Make Up</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active skincare-link" href="#" style="margin-right: 4px;">Skincare</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active hair-link" href="#" style="margin-right: 4px;">Hair</a>
+                </li>
+
+            </ul>
+        </div>
+
+
+        <div class="navbar-content logo d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-eye"></i>
+            <a class="navbar-brand" href="/">AuraAllure</a>
+        </div>
+
+
+
+
+        <div class="navbar-content right-nav ">
+            <ul class="list-unstyled mb-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/search"><i class="fa-solid fa-magnifying-glass"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account-details"><i class="fa-solid fa-user"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{{!-- makeup products list --}}
+<div class="makeup-content">
+    <div class="row">
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Foundation</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Concealer</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Primer</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Blush</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Powder</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Mascara</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Eyeliner</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Lipstick</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Setting Spray</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Bronzer</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Highlighter</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">EyeShadow</a></div>
+    </div>
+</div>
+
+<div class="hair-content">
+    <div class="row">
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Shampoo</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Conditioner</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Oil</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Mask</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Serum</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Spray</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Gel</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Mousse</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Leave-in Conditioner</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Heat Protectant</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Hair Treatment</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Dry Shampoo</a></div>
+    </div>
+</div>
+
+<div class="skincare-content">
+    <div class="row">
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Cleanser</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Toner</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Moisturizer</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Serum</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Face Mask</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Sunscreen</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Eye Cream</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Exfoliator</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Face Oil</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Sheet Mask</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Night Cream</a></div>
+        <div class="col-6 col-md-3 col-lg-3 item"><a href="/">Lip Balm</a></div>
+    </div>
+</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.querySelector('.makeup-link').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        document.querySelector('.makeup-content').classList.toggle('active');
+    });
+
+    // Optional: Close the makeup-content when clicking outside of it
+    document.addEventListener('click', function (event) {
+        var isClickInside = document.querySelector('.makeup-link').contains(event.target) ||
+            document.querySelector('.makeup-content').contains(event.target);
+
+        if (!isClickInside) {
+            document.querySelector('.makeup-content').classList.remove('active');
+        }
+    });
+
+    //skincare-section
+    document.querySelector('.skincare-link').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        document.querySelector('.skincare-content').classList.toggle('active');
+    });
+
+    // Optional: Close the SKINCARE-content when clicking outside of it
+    document.addEventListener('click', function (event) {
+        var isClickInside = document.querySelector('.skincare-link').contains(event.target) ||
+            document.querySelector('.skincare-content').contains(event.target);
+
+        if (!isClickInside) {
+            document.querySelector('.skincare-content').classList.remove('active');
+        }
+    });
+
+    //hair
+    document.querySelector('.hair-link').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        document.querySelector('.hair-content').classList.toggle('active');
+    });
+
+    // Optional: Close the HAIR-content when clicking outside of it
+    document.addEventListener('click', function (event) {
+        var isClickInside = document.querySelector('.hair-link').contains(event.target) ||
+            document.querySelector('.hair-content').contains(event.target);
+
+        if (!isClickInside) {
+            document.querySelector('.hair-content').classList.remove('active');
+        }
+    });
+
+</script>

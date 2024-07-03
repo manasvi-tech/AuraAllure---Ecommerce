@@ -1,0 +1,35 @@
+<footer class="footer">
+    <div class="footer-box" id="first-footer">
+        <h2>AuraAllure</h2>
+        <p>Welcome to AuraAllure! Your ultimate beauty destination, offering a curated selection of top-tier makeup,
+            skincare, and haircare products. Discover the latest trends and high-quality essentials to enhance your
+            beauty routine. Shop with us and let your radiance shine through every day.</p>
+    </div>
+    <div class="footer-box" id="second-footer">
+        <h2>Top Categories</h2>
+        <ul>
+            <li class="top-categories"><a href="">Home</a></li>
+            <li class="top-categories"><a href="">Skincare</a></li>
+            <li class="top-categories"><a href="">Hair</a></li>
+            <li class="top-categories"><a href="">Makeup</a></li>
+           
+        </ul>
+    </div>
+    <div class="footer-box" id="third-footer">
+        <h2>Submit your Query Here</h2>
+        <form action="/query" method="post" class="form-group" >
+            <form action="/submit-query" method="post">
+                {{!-- <label for="name">Name:</label><br> --}}
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required><br><br>
+{{!-- 
+                <label for="email">Email:</label><br> --}}
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email Id" required><br><br>
+
+                {{!-- <label for="query">Your Query:</label><br> --}}
+                <textarea id="query" class="form-control" name="query" rows="4" cols="40" placeholder="Please place you Query here"></textarea><br><br>
+
+                <input class="btn btn-secondary" type="submit" value="Submit">
+            </form>
+        </form>
+    </div>
+</footer>

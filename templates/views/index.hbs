@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>header}}
+</head>
+
+<body>
+    <div class="welcome">
+        <p>Welcome to AuraAllure, your one-stop beauty destination. Sales and Discounts are live 12 July. Buy your
+            beauty products now!</p>
+    </div>
+    {{>navbar}}
+
+    
+    <div class="container">
+        <div class="row">
+            <!-- Left Div -->
+            <div class="col-md-4 d-none d-md-block">
+                
+                    <!-- Content for the left div -->
+                    <h2>Sale Upto 40%</h2>
+                    <p>Live till 12th July</p>
+            </div>
+            <!-- Carousel -->
+            <div class="col-md-8 col-12 p-0">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="images/indexcar1.png" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/indexcar3.png" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="images/indexcar2.png" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="latest-products">
+        <div class="latest-products-heading">
+            <h1>ALL TIME POPULAR</h1>
+        </div>
+
+        <div class="latest-products-content">
+            <div class="flex-container">
+                <div class="latest-card">
+                    <img src="images/indexlatest1.png" alt="">
+                    <button class="centered-btn btn btn-secondary">Visit Offers</button>
+                </div>
+                <div class="latest-card">
+                    <img src="images/indexlatest2.png" alt="">
+                    <button class="centered-btn btn btn-secondary">Visit Offers</button>
+                </div>
+                <div class="latest-card">
+                    <img src="images/indexlatest3.png" alt="">
+                    <button class="centered-btn btn btn-secondary">Visit Offers</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="product-heading">
+        <h2>Our Latest Releases</h2>
+    </div>
+
+    <div class="product-release-container" style="display: flex;
+    flex-wrap:wrap; justify-content:center;align-items:center max-width:100vw;height:fit-content @media (max-width:786px) {
+    .search-products{
+        padding: 5px 2px 5px 2px;
+        width: 100vw;
+    }
+}   " >
+        {{>card}}
+        {{>card}}
+        {{>card}}
+        {{>card}}
+        {{>card}}
+        {{>card}}
+    </div>
+
+        <h3 style="text-align: center; "><a style="text-decoration: none; color:black"  href="/products">All Products <i class="fa-solid fa-arrow-right"></i></a></h3>
+
+    </div>
+
+    {{>footer}}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        const component1 = document.querySelector('.let-div');
+        const component2 = doucument.querySelector('.carousel-inner');
+
+        function checkHeights() {
+            const height1 = component1.clientHeight;
+            const height2 = component2.clientHeight;
+
+            if (height1 === height2) {
+                console.log('Heights are equal:', height1);
+            } else {
+                console.log('Heights are not equal. Component 1:', height1, 'Component 2:', height2);
+            }
+        }
+
+        const observer1 = new ResizeObserver(checkHeights);
+        const observer2 = new ResizeObserver(checkHeights);
+
+        observer1.observe(component1);
+        observer2.observe(component2);
+
+        // Initial check
+        checkHeights();
+
+    </script>
+
+</body>
+
+</html>

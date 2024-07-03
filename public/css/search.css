@@ -1,0 +1,37 @@
+/* .body{
+    height: fit-content;
+} */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.content {
+    flex: 1;
+}
+.footer {
+   
+    padding: 20px 0;
+}
+
+.form-control, .btn-outline-success{
+    height: 40px;
+    font-size: 1.3rem;
+}
+
+.search-products{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 100px 10px 100px;
+}
+@media (max-width:768px) {
+    .search-products{
+        padding: 5px 2px 5px 2px;
+        width: 100vw;
+    }
+}   
+
+

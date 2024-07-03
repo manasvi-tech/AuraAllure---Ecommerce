@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>header}}
+    <link rel="stylesheet" href="css/register.css">
+</head>
+
+<body>
+    {{>navbar}}
+    <div class="register-login-page">
+        <div class="login-page">
+            <h1>Login</h1>
+            {{!-- <p>Please Login Here</p> --}}
+            <form  action="/log-in" method="post">
+                <hr>
+                <label for="email"><b>Email</b></label>
+                <input type="text" placeholder="Enter email" name="email" id="email1" required>
+
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" id="login-psw" required>
+                <hr>
+
+                <button type="submit" class="registerbtn">LogIn</button>
+
+            </form>
+
+        </div>
+
+
+
+
+        <div class="register-page">
+            <h1>Create Account</h1>
+            
+            <form class="rform" action="/register" method="post">
+                <hr>
+                <label for="fistname"><b>First Name</b></label>
+                <input type="text" placeholder="Enter First Name" name="firstname" id="firstname" required>
+
+                <label for="lastname"><b>Last Name</b></label>
+                <input type="text" placeholder="Enter Last Name" name="lastname" id="lastname" required>
+
+                <label for="email"><b>Email</b></label>
+                <input type="text" placeholder="Enter email" name="email" id="email" required>
+
+                
+
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" id="psw" required>
+
+                <label for="cpass"><b>Confirm Password</b></label>
+                <input type="password" placeholder="Enter Password" name="cpass" id="cpsw" required>
+
+                <label class="gender" for="">Select your gender</label>
+                <div class="options">
+                    <input type="radio" id="male" name="gender" value="male">
+                    <label for="male">Male</label><br>
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="female">Female</label><br>
+                    <input type="radio" id="other" name="gender" value="other">
+                    <label for="other">Other</label><br>
+                </div>
+
+                <hr>
+
+                <button type="submit" class="registerbtn">Register</button>
+
+            </form>
+
+
+        </div>
+    </div>
+    {{>footer}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>
