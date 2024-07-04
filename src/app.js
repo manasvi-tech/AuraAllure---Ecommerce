@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 const auth = require('./middleware/auth')
 const Product = require("./models/Product");
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 require("./db/conn");
 const Query = require("./models/query");
 const User = require("./models/User");
@@ -28,22 +29,22 @@ hbs.registerPartials(partialsPath);
 
 
 // Register the custom helper
-hbs.registerHelper('range', function(from, to, incr, block) {
-    var accum = '';
-    for(var i = from; i <= to; i += incr)
-        accum += block.fn(i);
-    return accum;
-});
+// hbs.registerHelper('range', function(from, to, incr, block) {
+//     var accum = '';
+//     for(var i = from; i <= to; i += incr)
+//         accum += block.fn(i);
+//     return accum;
+// });
 
-hbs.registerHelper('lte', function(v1, v2) {
-    return v1 <= v2;
-});
+// hbs.registerHelper('lte', function(v1, v2) {
+//     return v1 <= v2;
+// });
 
 app.get('/', async (req, res) => {
     const products = await Product.find().limit(6);
-    console.log(products);
-    res.render('index',{
-        products:products
+    // console.log(products);
+    res.render('index', {
+        products: products
     })
 })
 
@@ -51,9 +52,29 @@ app.get('/account-details', auth, (req, res) => {
     res.render("account-details");
 })
 
-app.get('/search', (req, res) => {
-    res.status(200).render('search');
+app.get('/searchPage', async (req, res) => {
+    try {
+        const products = await Product.find().skip(6).limit(10);
+        res.status(200).render('search',{
+            products:products
+        });
+
+    } catch(err){
+        res.status(400).send(err);
+    }
+    
 })
+
+// app.get('/search', (req, res) => {
+//     const searchTerm = req.query.query; // Retrieve the 'query' parameter from the request
+
+//     // Process the search term (e.g., query MongoDB, fetch data from external API, etc.)
+//     // Example: Log the search term to console
+//     console.log('Search Term:', searchTerm);
+
+//     // Return response as needed
+//     res.render("products.hbs")
+// });
 
 app.get('/products', (req, res) => {
     res.status(200).render('products');
@@ -64,17 +85,27 @@ app.get('/productDetails/:id', async (req,res)=>{
         const id = req.params.id;
         const product = await Product.findOne({id:id});
 
-        if(!product){
+        if(!product){D
             res.status(404).send('Product not found')
         }
 
+        const token = req.cookies.jwt;
+        console.log(token);
+
+        const verifyUser = jwt.verify(token,process.env.SECRET_KEY); 
+
+        const user = await User.findOne({_id:verifyUser._id}) //getting the details of that user
+        const isAdmin = user.isAdmin
+        
         res.render('productDetails',{
-            product:product
+            product:product,
+            isAdmin:isAdmin
         })
     } catch(err){
         res.status(400).send(err);
     }
 })
+
 
 app.post('/query', async (req, res) => {
     try {
@@ -100,7 +131,8 @@ app.post('/register', async (req, res) => {
             email: req.body.email,
             gender: req.body.gender,
             password: req.body.password,
-            cpass: req.body.cpass
+            cpass: req.body.cpass,
+            isAdmin:false
         });
 
         const exists = await User.findOne({ email: req.body.email });
@@ -141,7 +173,7 @@ app.post('/log-in', async (req, res) => {
         console.log(isMatch);
 
         const token = await userEmail.generateToken();
-        //console.log(token);
+        console.log(token);
 
         const expirationDate = new Date();
         //browser will remember the user for 5 days after login

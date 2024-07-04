@@ -1,61 +1,99 @@
 <style>
-    .column{
-        margin: 5px 8px 5px 8px;
+    .column {
+        margin: 5px 8px;
         padding-left: 1rem;
         padding-bottom: 1rem;
         padding-right: 1rem;
         border: 2px solid black;
         width: 20rem;
-    }
-
-    .img-container>img{
-        min-height: 20rem;
-        min-width:20rem;
-        max-width: 20rem;
-        max-height: 20rem;
-    }
-    .column>h3{
-        text-transform: uppercase;
+        height: 32rem;
     }
 
     .img-container {
+        position: relative;
+        /* Needed for positioning the heart icon */
         width: 100%;
         height: 20rem;
-        overflow: hidden; /* Hide overflow to ensure image fits within the box */
+        overflow: hidden;
+        /* Hide overflow to ensure image fits within the box */
     }
 
+    .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Ensure the image covers the container */
+    }
 
-    .column>a{
+    .heart-icon {
+        position: absolute;
+        bottom: 10px;
+        left: 5px;
+        font-size: 2rem;
+        color: black;
+        background-color: white;
+        opacity: 0.8;
+        /* Slight background to enhance visibility */
+        cursor: pointer;
+        border-radius: 50%;
+        padding: 2px;
+    }
+
+    .column>h3 {
+        text-transform: uppercase;
+    }
+
+    .column>a {
         text-decoration: none;
         color: black;
     }
-    @media(max-width:768px){
-        .img-container>img{
+
+
+
+    @media(max-width: 768px) {
+        .img-container img {
             max-width: 8rem;
             max-height: 20rem;
-            margin: 2px 2px 2px 2px;
+            margin: 2px;
         }
-        .column{
+
+        .column {
             max-width: 8rem;
         }
-        
-        
     }
 </style>
-<div class="column"><a href="/productDetails/{{id}}",>
-   <div class="img-container">
-    <img src="{{imageUrl}}" alt="Product Image">
-   </div>
-   <div class="content">
-    <h3>{{name}}</h3>
-    <p class="price" style="color: #212a2f;">{{price}}</p>
-    <div class="rating">
-        <i class="fa-regular fa-star"></i>
-        <i class="fa-regular fa-star"></i>
-        <i class="fa-regular fa-star"></i>
-        <i class="fa-regular fa-star"></i>
-        <i class="fa-regular fa-star"></i>
+<div class="column">
+    <div class="img-container">
+        <img src="{{imageUrl}}" alt="Product Image">
+        <i class="fa-solid fa-heart heart-icon" onclick="toggleHeartBackground(event)"></i>
     </div>
-   </div>
-   </a>
+    {{!-- {{brand}} --}}
+    <a href="/productDetails/{{id}}">
+        <div class="content">
+            <h3 class="limited-heading">{{name}}</h3>
+            <p class="price" style="color:red">Rs. {{price}}</p>
+            <div class="rating">
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+            </div>
+
+        </div>
+    </a>
 </div>
+
+<script>
+        function toggleHeartBackground(event) {
+            const heartIcon = event.target
+            {{!-- const heartIcon = document.querySelector('.heart-icon'); --}}
+            if (heartIcon.style.color == 'red') {
+                heartIcon.style.color = 'black';
+            } else {
+                heartIcon.style.color = 'red';
+            }
+        }
+
+    </script>
+

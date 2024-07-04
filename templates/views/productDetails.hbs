@@ -387,6 +387,28 @@
             cursor: pointer;
         }
 
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            margin: 7rem 2rem 0rem 0rem;
+            font-size: 1.3rem;
+        }
+
+        .product-details {
+            padding-right: 10rem;
+        }
+
+        .product-details>h2,
+        .product-details>h3,
+        .product-info-rating,
+        .product-details>p {
+
+            margin-bottom: 2rem;
+        }
+
         @media (max-width: 768px) {
             .product-info-container {
                 flex-direction: column;
@@ -411,11 +433,32 @@
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
             </div>
+
+            <div class="product-info-description">
+                <p style="color:#212a2f">{{product.description}}</p>
+            </div>
             <div class="product-info-quantity">
                 <button id="decrease">-</button>
                 <input type="number" id="quantity" value="1" min="1" readonly>
                 <button id="increase">+</button>
             </div>
+            <div class="buttons">
+                <div class="btn btn-secondary">
+                    Add to Wishlist
+                </div>
+                <div class="btn btn-primary">
+                    Buy now
+                </div>
+            </div>
+            {{isAdmin}}
+            {{#if isAdmin}}
+            <div class="buttons">
+                <div class="btn"><i class="fa-solid fa-trash"></i></div>
+                <div class="btn"><i class="fa-solid fa-pencil"></i></div>
+            </div>
+            {{/if}}
+
+
 
         </div>
     </div>

@@ -19,8 +19,8 @@ const productSchema = new mongoose.Schema({
     default: "No description"
   },
   imageUrl: {
-    type:String,
-    required:true
+    type: String,
+    required: true
   },
   price: {
     type: Number,
@@ -32,6 +32,21 @@ const productSchema = new mongoose.Schema({
   },
   underSale: {
     type: Boolean,
+    required: false
+  },
+  brand: {
+    type: String,
+    required: false
+  },
+  categories: {
+    type: [String],
+    required: false
+  },
+  colours: {
+    type: [{
+      name: String,
+      hexValue: String
+    }],
     required: false
   }
 });

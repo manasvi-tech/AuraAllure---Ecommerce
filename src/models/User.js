@@ -39,6 +39,11 @@ const userSchema = mongoose.Schema({
         required:true
     },
 
+    isAdmin:{
+        type:String,
+        default:false
+    },
+
     tokens:[{
         token:{
             type:String,
