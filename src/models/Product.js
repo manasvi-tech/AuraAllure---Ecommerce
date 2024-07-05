@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema({
       hexValue: String
     }],
     required: false
+  },
+  quantity:{
+    type:Number,
+    required:true
   }
 });
 

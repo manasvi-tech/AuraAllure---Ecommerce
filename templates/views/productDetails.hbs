@@ -3,7 +3,11 @@
 
 <head>
     {{>header}}
-
+    <style>
+        .buttons>{
+            display: flex;
+        }
+    </style>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&display=swap');
 
@@ -439,7 +443,7 @@
             </div>
             <div class="product-info-quantity">
                 <button id="decrease">-</button>
-                <input type="number" id="quantity" value="1" min="1" readonly>
+                <input type="number" id="quantity" value="1" min="1" placeholder={{product.quantity}}>
                 <button id="increase">+</button>
             </div>
             <div class="buttons">
@@ -450,31 +454,39 @@
                     Buy now
                 </div>
             </div>
+            {{product.id}}
             {{isAdmin}}
-            {{#if isAdmin}}
+
+            {{#unless isAdmin}}
+            <p>Non-admin content</p>
+            {{else}}
             <div class="buttons">
-                <div class="btn"><i class="fa-solid fa-trash"></i></div>
-                <div class="btn"><i class="fa-solid fa-pencil"></i></div>
+
+                    <div><a href="/deleteAdmin/{{product.id}}"><i class="fa-solid fa-trash"></i></a></div>
+                    <div><a href="/editAdmin/{{product.id}}"><i class="fa-solid fa-pencil"></i></a></div>
             </div>
-            {{/if}}
-
-
+            {{/unless}}
+{{!-- 
+            {{#if isAdmin}}
+            <h1>abcd</h1>
+            {{/if}} --}}
 
         </div>
     </div>
 
     {{>footer}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>
+
+    <script>script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity = "sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin = "anonymous" >
+    </script>
     <script>
-        document.getElementById('decrease').addEventListener('click', function () {
-            var quantity = document.getElementById('quantity');
-            var value = parseInt(quantity.value, 10);
-            if (value > 1) {
-                quantity.value = value - 1;
-            }
-        });
+            document.getElementById('decrease').addEventListener('click', function () {
+                var quantity = document.getElementById('quantity');
+                var value = parseInt(quantity.value, 10);
+                if (value > 1) {
+                    quantity.value = value - 1;
+                }
+            });
 
         document.getElementById('increase').addEventListener('click', function () {
             var quantity = document.getElementById('quantity');

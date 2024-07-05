@@ -73,20 +73,9 @@
 
         </div>
         <div class="allproducts">
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
-            {{>card}}
+           {{#each products}}
+           {{>card this}}
+           {{/each}}
 
         </div>
     </div>

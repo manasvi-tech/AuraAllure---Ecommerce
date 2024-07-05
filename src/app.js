@@ -13,6 +13,8 @@ const jwt = require('jsonwebtoken');
 require("./db/conn");
 const Query = require("./models/query");
 const User = require("./models/User");
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })) // i want to get all the data of the form
@@ -55,14 +57,14 @@ app.get('/account-details', auth, (req, res) => {
 app.get('/searchPage', async (req, res) => {
     try {
         const products = await Product.find().skip(6).limit(10);
-        res.status(200).render('search',{
-            products:products
+        res.status(200).render('search', {
+            products: products
         });
 
-    } catch(err){
+    } catch (err) {
         res.status(400).send(err);
     }
-    
+
 })
 
 // app.get('/search', (req, res) => {
@@ -76,32 +78,40 @@ app.get('/searchPage', async (req, res) => {
 //     res.render("products.hbs")
 // });
 
-app.get('/products', (req, res) => {
-    res.status(200).render('products');
+app.get('/products', auth, async (req, res) => {
+    try {
+        const products = await Product.find().skip(16).limit(14);
+        console.log(products);
+        res.status(200).render('products', {
+            products: products
+        });
+    } catch (err) {
+        console.log(err);
+    }
 })
 
-app.get('/productDetails/:id', async (req,res)=>{
-    try{
+app.get('/productDetails/:id', async (req, res) => {
+    try {
         const id = req.params.id;
-        const product = await Product.findOne({id:id});
+        const product = await Product.findOne({ id: id });
 
-        if(!product){D
+        if (!product) {
             res.status(404).send('Product not found')
         }
 
         const token = req.cookies.jwt;
         console.log(token);
 
-        const verifyUser = jwt.verify(token,process.env.SECRET_KEY); 
+        const verifyUser = jwt.verify(token, process.env.SECRET_KEY);
 
-        const user = await User.findOne({_id:verifyUser._id}) //getting the details of that user
+        const user = await User.findOne({ _id: verifyUser._id }) //getting the details of that user
         const isAdmin = user.isAdmin
-        
-        res.render('productDetails',{
-            product:product,
-            isAdmin:isAdmin
+
+        res.render('productDetails', {
+            product: product,
+            isAdmin: isAdmin
         })
-    } catch(err){
+    } catch (err) {
         res.status(400).send(err);
     }
 })
@@ -123,6 +133,7 @@ app.post('/query', async (req, res) => {
 })
 
 
+
 app.post('/register', async (req, res) => {
     try {
         const registerUser = new User({
@@ -132,7 +143,7 @@ app.post('/register', async (req, res) => {
             gender: req.body.gender,
             password: req.body.password,
             cpass: req.body.cpass,
-            isAdmin:false
+            isAdmin: false
         });
 
         const exists = await User.findOne({ email: req.body.email });
@@ -175,6 +186,8 @@ app.post('/log-in', async (req, res) => {
         const token = await userEmail.generateToken();
         console.log(token);
 
+        console.log(req.user);
+
         const expirationDate = new Date();
         //browser will remember the user for 5 days after login
         expirationDate.setDate(expirationDate.getDate() + 5); // Set the expiration date to 7 days from now
@@ -194,6 +207,97 @@ app.post('/log-in', async (req, res) => {
     }
 })
 
+app.get('/deleteAdmin/:id', async (req, res) => {
+    try {
+        console.log("here")
+        const id = req.params.id;
+        const product = await Product.findOne({ id: id });
+
+        if (!product) {
+            res.status(404).send('Product not found')
+        }
+
+        res.render('deleteAdmin', {
+            product: product
+        })
+    } catch (err) {
+        req.status(400).send(err);
+    }
+
+
+})
+
+
+app.get('/editAdmin/:id', async (req, res) => {
+    try {
+        console.log("here")
+        const id = req.params.id;
+        const product = await Product.findOne({ id: id });
+
+        if (!product) {
+            res.status(404).send('Product not found')
+        }
+
+        res.render('editAdmin', {
+            product: product
+        })
+    } catch (err) {
+        req.status(400).send(err);
+    }
+
+
+})
+
+
+app.get('/logout', auth, async (req, res) => {
+    try {
+        console.log(req.user);
+        res.clearCookie("jwt");
+        console.log("logout succesful")
+        await req.user.save();
+        res.render('register')
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+app.delete('/deleteItem/:id', async (req, res) => {
+    try {
+        const itemId = req.params.id;
+        const result = await Product.findByIdAndDelete(itemId)
+        if (!result) console.log("product isnt found");
+        res.render('index')
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+
+app.post('/editItem/:id', async (req, res) => {
+    const newQuantity = req.body.quantity;
+    const itemId = req.params.id;
+
+    try {
+        const result = await Product.updateOne({ id: itemId }, {
+            $set: {
+                quantity: newQuantity
+            }
+        });
+        if (result.nModified === 0) {
+            console.log("Product not found or quantity unchanged");
+        } else {
+            console.log("Product updated successfully");
+        }
+
+        const products = await Product.find().limit(6);
+        res.render('index', {
+            products: products
+        })
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
 
 
 

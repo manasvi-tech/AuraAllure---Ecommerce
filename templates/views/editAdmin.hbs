@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>header}}
+    <style>
+        .product-delete-container {
+            display: flex;
+            padding: 2rem 0;
+        }
+
+        .product-delete-image,
+        .product-delete-details {
+            flex: 1;
+            max-height: 70vh;
+        }
+
+        img {
+            max-height: 70vh
+        }
+
+        .product-delete-details {
+            padding-top: 5rem
+        }
+
+        .btn {
+            margin-top: 1.3rem;
+        }
+
+        .product-info-quantity {
+            display: flex;
+            margin-top: 10px;
+
+        }
+
+        .product-info-quantity button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .product-info-quantity input {
+            width: 50px;
+            text-align: center;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    {{>navbar}}
+    <div class="product-delete-container">
+        <div class="product-delete-image">
+            <img src="{{product.imageUrl}}" alt="Image Unavailable">
+        </div>
+        <div class="product-delete-details">
+            <h2 class="product-info-heading">{{product.name}}</h2>
+            <h3 class="product-info-price">Rs. {{product.price}}</h3>
+            {{!-- {{product.id}} --}}
+
+            <div class="confirmation" style="margin-top:2rem">
+                <h3 style="color:black; margin-top:3rem">Edit Quantity</h3>
+                <form action="/editItem/{{product.id}}" method="POST">
+                    <div class="product-info-quantity">
+                        <button type="button" id="decrease">-</button>
+                        <input type="number" id="quantity" name="quantity" min="0" value="{{product.quantity}}">
+                        <button type="button" id="increase">+</button>
+                    </div>
+                    <button class="btn btn-success" style="font-size:1.3rem" type="submit">Submit</button>
+                </form>
+                <button class="btn btn-danger" id="no" style="font-size:1.3rem">No, Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('decrease').addEventListener('click', function () {
+            var quantity = document.getElementById('quantity');
+            var value = parseInt(quantity.value, 10);
+            if (value > 1) {
+                quantity.value = value - 1;
+            }
+        });
+
+        document.getElementById('increase').addEventListener('click', function () {
+            var quantity = document.getElementById('quantity');
+            var value = parseInt(quantity.value, 10);
+            quantity.value = value + 1;
+        });
+    </script>
+</body>
+
+</html>

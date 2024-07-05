@@ -6,7 +6,30 @@
 .collapse-container{
     flex:1;
     background-color: blanchedalmond;
+    padding: 7vh 2vh;
 }
 .details-container{
-    flex:3
+    flex:3;
 }
+.user-icon{
+    height: inherit;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5rem;
+}
+
+.user-options>ul>a>li{
+    text-decoration: none;
+    color: black;
+    font-size: 1.7rem;
+    list-style: none;
+    padding: 0.2rem 0.5rem;
+    /* display: flex;
+    justify-content: center; */
+}
+
+.user-options>ul>a{
+    text-decoration: none;
+}
+
