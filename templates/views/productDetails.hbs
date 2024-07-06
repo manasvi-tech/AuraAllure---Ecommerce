@@ -4,8 +4,20 @@
 <head>
     {{>header}}
     <style>
-        .buttons>{
+        .buttons{
             display: flex;
+            margin-top: 2rem;
+        }
+
+        @media(max-width:768px){
+            .product-info-image{
+                padding: 2rem 5rem;
+            }
+        }
+        .stock{
+            color: red;
+            font-size:medium;
+            margin-top:2rem
         }
     </style>
     <style>
@@ -397,7 +409,7 @@
         }
 
         .btn {
-            margin: 7rem 2rem 0rem 0rem;
+            margin: 2rem 2rem 0rem 0rem;
             font-size: 1.3rem;
         }
 
@@ -446,31 +458,31 @@
                 <input type="number" id="quantity" value="1" min="1" placeholder={{product.quantity}}>
                 <button id="increase">+</button>
             </div>
-            <div class="buttons">
-                <div class="btn btn-secondary">
-                    Add to Wishlist
-                </div>
-                <div class="btn btn-primary">
-                    Buy now
-                </div>
-            </div>
-            {{product.id}}
-            {{isAdmin}}
 
-            {{#unless isAdmin}}
-            <p>Non-admin content</p>
+            {{#if  product.quantity}}
             {{else}}
+                <div class="stock" style="color: red; font-size:medium">
+                    OUT OF STOCK
+                </div>
+            {{/if}}
             <div class="buttons">
-
-                    <div><a href="/deleteAdmin/{{product.id}}"><i class="fa-solid fa-trash"></i></a></div>
-                    <div><a href="/editAdmin/{{product.id}}"><i class="fa-solid fa-pencil"></i></a></div>
+                <a href="/addProductWish/{{product._id}}"><div class="btn btn-secondary">
+                    Add to Wishlist
+                </div></a>
+                <a href="/buy/{{product._id}}"><div class="btn btn-primary" id="buy" onclick="stockCheck()">
+                    Buy now
+                </div></a>
             </div>
-            {{/unless}}
-{{!-- 
-            {{#if isAdmin}}
-            <h1>abcd</h1>
-            {{/if}} --}}
 
+
+            {{#if isAdmin}}
+            <div class="buttons">
+                <div><a href="/deleteAdmin/{{product._id}}"><i class="fa-solid fa-trash"></i></a></div>
+                <div><a href="/editAdmin/{{product._id}}"><i class="fa-solid fa-pencil"></i></a></div>
+            </div>
+            
+
+            {{/if}}
         </div>
     </div>
 
@@ -493,6 +505,7 @@
             var value = parseInt(quantity.value, 10);
             quantity.value = value + 1;
         });
+
     </script>
 
 </body>

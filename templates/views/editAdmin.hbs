@@ -61,7 +61,7 @@
 
             <div class="confirmation" style="margin-top:2rem">
                 <h3 style="color:black; margin-top:3rem">Edit Quantity</h3>
-                <form action="/editItem/{{product.id}}" method="POST">
+                <form action="/editItem/{{product._id}}" method="POST">
                     <div class="product-info-quantity">
                         <button type="button" id="decrease">-</button>
                         <input type="number" id="quantity" name="quantity" min="0" value="{{product.quantity}}">

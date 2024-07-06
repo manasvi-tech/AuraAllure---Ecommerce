@@ -1,0 +1,113 @@
+<style>
+    .cardPartial {
+        display: flex;
+        max-width: 100vw;
+        max-height: 30vh;
+        border: 1px solid black;
+        margin: 1rem 1rem;
+        overflow: hidden;
+    }
+
+    img {
+        max-height: inherit;
+        width: 20rem;
+    }
+
+    .product-image {
+        flex: 1;
+
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .product-info {
+        flex: 3;
+        display: flex;
+        padding-left: 5rem;
+        padding-top: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-quantity {
+        flex: 4;
+        justify-content: space-between;
+    }
+
+    .product-info-quantity {
+        display: flex;
+        padding-top: 2rem;
+        justify-content: right;
+        padding-right: 5rem;
+
+    }
+
+    .product-info-quantity button {
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .product-info-quantity input {
+        width: 50px;
+        text-align: center;
+        font-size: 16px;
+        margin: 0 10px;
+    }
+
+    .buttons {
+        display: flex;
+        
+    }
+    .btn{
+        font-size: 1.2rem;
+        margin-right: 1rem;
+        margin-top: 2rem;
+        background-color: #212a2f;
+        border: 1px solid #212a2f;
+    }
+</style>
+
+<div class="cardPartial">
+    <div class="product-image">
+        <img src={{imageUrl}} alt="">
+    </div>
+    <a href="/productDetails/{{_id}}">
+        <div class="product-info">
+            <h3>{{name}}</h3>
+            <p style="color: red;">Rs. {{price}}</p>
+            <div class="buttons">
+                <a href="/moveToWishlist/{{_id}}"><button class="btn btn-primary">Move to Wishlist</button></a>
+                <a href="/removeProduct/{{_id}}"><button class="btn btn-danger">Remove from cart</button></a>
+            </div>
+        </div>
+
+    </a>
+    <div class="product-quantity">
+        <div class="product-info-quantity">
+            <button id="decrease">-</button>
+            <input type="number" id="quantity" value="1" min="1" placeholder={{product.quantity}}>
+            <button id="increase">+</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('decrease').addEventListener('click', function (event) {
+        var quantity = document.getElementById('quantity');
+        var value = parseInt(quantity.value, 10);
+        if (value > 1) {
+            quantity.value = value - 1;
+        }
+    });
+
+    document.getElementById('increase').addEventListener('click', function (event) {
+        var quantity = document.getElementById('quantity');
+        var value = parseInt(quantity.value, 10);
+        quantity.value = value + 1;
+    });
+
+</script>

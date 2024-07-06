@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: [true,"Name of the product is required"]
   },
   id: {
     type: String,
-    required: true
+    required: [true,"Email of the product is required"]
   },
   rating: {
     type: Number,
@@ -20,15 +20,15 @@ const productSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String,
-    required: true
+    required: [true,"imageUrl is required"]
   },
   price: {
     type: Number,
-    required: true
+    required: [true,"price is required"]
   },
   originalPrice: {
     type: Number,
-    required: false
+    required: [true,"original price is required"]
   },
   underSale: {
     type: Boolean,
@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema({
   },
   brand: {
     type: String,
-    required: false
+    required: [true,"brand is required"]
   },
   categories: {
     type: [String],
@@ -51,7 +51,7 @@ const productSchema = new mongoose.Schema({
   },
   quantity:{
     type:Number,
-    required:true
+    required:[true,"Quantity is required"]
   }
 });
 

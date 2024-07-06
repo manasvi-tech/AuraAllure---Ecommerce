@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
-// const exphbs = require('express-handlebars');
+const { engine } = require('express-handlebars');
 const port = process.env.PORT;
 const path = require('path');
 const hbs = require('hbs');
@@ -14,6 +14,7 @@ require("./db/conn");
 const Query = require("./models/query");
 const User = require("./models/User");
 const methodOverride = require("method-override");
+const { read } = require('fs');
 app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(cookieParser());
@@ -24,23 +25,13 @@ const templatePath = path.join(__dirname, "../templates/views");
 const partialsPath = path.join(__dirname, "../templates/partials");
 
 app.use(express.static(staticPath));
+app.engine('handlebars', engine());
 app.set("view engine", "hbs");
 
 app.set("views", templatePath);
 hbs.registerPartials(partialsPath);
 
-
-// Register the custom helper
-// hbs.registerHelper('range', function(from, to, incr, block) {
-//     var accum = '';
-//     for(var i = from; i <= to; i += incr)
-//         accum += block.fn(i);
-//     return accum;
-// });
-
-// hbs.registerHelper('lte', function(v1, v2) {
-//     return v1 <= v2;
-// });
+//Basic pages
 
 app.get('/', async (req, res) => {
     const products = await Product.find().limit(6);
@@ -67,16 +58,6 @@ app.get('/searchPage', async (req, res) => {
 
 })
 
-// app.get('/search', (req, res) => {
-//     const searchTerm = req.query.query; // Retrieve the 'query' parameter from the request
-
-//     // Process the search term (e.g., query MongoDB, fetch data from external API, etc.)
-//     // Example: Log the search term to console
-//     console.log('Search Term:', searchTerm);
-
-//     // Return response as needed
-//     res.render("products.hbs")
-// });
 
 app.get('/products', auth, async (req, res) => {
     try {
@@ -92,8 +73,8 @@ app.get('/products', auth, async (req, res) => {
 
 app.get('/productDetails/:id', async (req, res) => {
     try {
-        const id = req.params.id;
-        const product = await Product.findOne({ id: id });
+        const _id = req.params.id;
+        const product = await Product.findOne({ _id: _id });
 
         if (!product) {
             res.status(404).send('Product not found')
@@ -106,16 +87,19 @@ app.get('/productDetails/:id', async (req, res) => {
 
         const user = await User.findOne({ _id: verifyUser._id }) //getting the details of that user
         const isAdmin = user.isAdmin
+        const email = user.email;
 
         res.render('productDetails', {
             product: product,
-            isAdmin: isAdmin
+            isAdmin: isAdmin,
+            email: email
         })
     } catch (err) {
         res.status(400).send(err);
     }
 })
 
+//query post
 
 app.post('/query', async (req, res) => {
     try {
@@ -132,7 +116,7 @@ app.post('/query', async (req, res) => {
     }
 })
 
-
+//login and register functionalities
 
 app.post('/register', async (req, res) => {
     try {
@@ -143,7 +127,10 @@ app.post('/register', async (req, res) => {
             gender: req.body.gender,
             password: req.body.password,
             cpass: req.body.cpass,
-            isAdmin: false
+            isAdmin: false,
+            products: [],
+            orderHistory: [],
+            wishlist:[]
         });
 
         const exists = await User.findOne({ email: req.body.email });
@@ -186,7 +173,7 @@ app.post('/log-in', async (req, res) => {
         const token = await userEmail.generateToken();
         console.log(token);
 
-        console.log(req.user);
+
 
         const expirationDate = new Date();
         //browser will remember the user for 5 days after login
@@ -194,9 +181,12 @@ app.post('/log-in', async (req, res) => {
         res.cookie("jwt", token, { expires: expirationDate, httpOnly: true, secure: true });
 
         console.log("cookie made");
+        const products = await Product.find().limit(6);
 
         if (isMatch) {
-            res.status(201).render("index");
+            res.status(201).render("index", {
+                products: products
+            });
         } else {
             res.send("Invalid details");
         }
@@ -207,46 +197,6 @@ app.post('/log-in', async (req, res) => {
     }
 })
 
-app.get('/deleteAdmin/:id', async (req, res) => {
-    try {
-        console.log("here")
-        const id = req.params.id;
-        const product = await Product.findOne({ id: id });
-
-        if (!product) {
-            res.status(404).send('Product not found')
-        }
-
-        res.render('deleteAdmin', {
-            product: product
-        })
-    } catch (err) {
-        req.status(400).send(err);
-    }
-
-
-})
-
-
-app.get('/editAdmin/:id', async (req, res) => {
-    try {
-        console.log("here")
-        const id = req.params.id;
-        const product = await Product.findOne({ id: id });
-
-        if (!product) {
-            res.status(404).send('Product not found')
-        }
-
-        res.render('editAdmin', {
-            product: product
-        })
-    } catch (err) {
-        req.status(400).send(err);
-    }
-
-
-})
 
 
 app.get('/logout', auth, async (req, res) => {
@@ -261,15 +211,155 @@ app.get('/logout', auth, async (req, res) => {
     }
 })
 
-app.delete('/deleteItem/:id', async (req, res) => {
+
+//cart functionalities
+
+app.get('/cart', auth, async (req, res) => {
+    const user = req.user;
+    const products = await Product.find({ _id: { $in: user.products } });
+    res.render('cart', {
+        products: products
+    })
+
+})
+
+app.get('/buy/:id', auth, async (req, res) => {
     try {
-        const itemId = req.params.id;
-        const result = await Product.findByIdAndDelete(itemId)
-        if (!result) console.log("product isnt found");
-        res.render('index')
+        const user = req.user;
+        const productId = req.params.id;
+        const product = await Product.findOne({ _id: productId });
+
+        if (!product || product.quantity == 0) {
+            res.status(400).send('Product does not exist')
+        } else {
+            if (!user.products.includes(productId)) {
+                user.products.push(productId);
+            } else {
+                return res.status(400).send('Product already added to cart');
+            }
+            // Save the updated user
+            await user.save();
+            const products = await Product.find({ _id: { $in: user.products } });
+            res.render('cart', {
+                products: products
+            })
+        }
+
+    } catch (err) {
+        res.status(400).send('account-details')
+    }
+
+})
+
+app.get('/removeProduct/:id',auth,async(req,res)=>{
+    try{
+        const user = req.user;
+        const itemid = req.params.id;
+
+        const index = user.products.indexOf(itemid);
+        if(index>-1){
+            user.products.splice(index,1);
+            console.log("product removed")
+        }
+        
+        const result = await user.save();
+        const products = await Product.find({ _id: { $in: user.products } });
+        console.log(products)
+
+        res.render('cart',{
+            products:products
+        })
+    
+
+    }catch(err){
+        res.status(400).send(err)
+    }
+});
+
+app.get('/moveToWishlist/:id',auth,async(req,res)=>{
+    try{
+        const itemid = req.params.id;
+        const user = req.user; 
+        const index = user.products.indexOf(itemid);
+        console.log(index)
+        if(index>-1){
+            user.products.splice(index,1);
+            console.log("product removed")
+        }
+
+        if(!user.wishList.includes(itemid)){
+            user.wishList.push(itemid);
+        }
+
+        await user.save();
+
+    }catch(err){
+        res.status(400).send(err);
+    }
+})
+
+
+
+
+//admin functionalities
+
+app.get('/newProductAdmin', async (req, res) => {
+    try {
+        res.render('newProductAdmin')
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.post('/newProduct', async (req, res) => {
+
+    try {
+        const registerProduct = new Product({
+            id: 982383,
+            name: req.body.name,
+            price: req.body.price,
+            originalPrice: req.body.org_price,
+            rating: req.body.rating,
+            brand: req.body.brand,
+            imageUrl: req.body.imageUrl,
+            quantity: req.body.quantity,
+            underSale: req.body.onSale,
+            description: req.body.description
+        })
+        const exists = await User.findOne({ name: req.body.name });
+        if (exists) {
+            res.status(400).send("Product already exists");
+        } else {
+            const added = await registerProduct.save();
+            console.log("Product added")
+            const products = await Product.find().limit(6);
+            res.status(200).render('index', {
+                products: products
+            });
+        }
+
+    } catch (err) {
+        res.status(400).send("couldnt add object " + err);
+    }
+})
+
+app.get('/editAdmin/:id', async (req, res) => {
+    try {
+        console.log("here")
+        const _id = req.params.id;
+        const product = await Product.findOne({ _id: _id });
+
+        if (!product) {
+            res.status(404).send('Product not found')
+        }
+
+        res.render('editAdmin', {
+            product: product
+        })
     } catch (err) {
         res.status(400).send(err);
     }
+
 
 })
 
@@ -299,6 +389,90 @@ app.post('/editItem/:id', async (req, res) => {
     }
 });
 
+app.get('/deleteAdmin/:id', async (req, res) => {
+    try {
+        console.log("here")
+        const _id = req.params.id;
+        const product = await Product.findOne({ _id: _id });
+
+        if (!product) {
+            res.status(404).send('Product not found')
+        }
+
+        res.render('deleteAdmin', {
+            product: product
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+
+});
+
+app.delete('/deleteItem/:id', async (req, res) => {
+    try {
+        const itemId = req.params.id;
+        const result = await Product.findByIdAndDelete(itemId)
+        if (!result) console.log("product isnt found");
+        const products = await Product.find().limit(6);
+        res.render('index', {
+            products: products
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+
+
+
+//wishlist functionalities
+
+app.get('/wishlist',auth,async(req,res)=>{
+    try{
+        const user=req.user;
+        // const wishList = user.wishList;
+        const wishListItems = await Product.find({ _id: { $in: user.wishList } });
+        console.log(wishListItems);
+
+
+
+        res.render('products',{
+            products:wishListItems
+        })
+    }
+    catch(err){
+        res.status(400).send(err);
+    }
+})
+
+app.get('/addProductWish/:id',auth,async(req,res)=>{
+    try{
+        const user = req.user;
+        const itemId = req.params.id;
+        console.log(itemId)
+
+        const product = await Product.findOne({ _id: itemId });
+
+        if (!product || product.quantity == 0) {
+            res.status(400).send('Product does not exist')
+        }
+        if(!user.wishList.includes(itemId)){
+            user.wishList.push(product._id);
+            console.log("Pushed")
+        }
+        const wishListItems = await Product.find({ _id: { $in: user.wishList } });
+        console.log(wishListItems)
+        res.render('products',{
+            products:wishListItems
+        })
+
+        await user.save();
+
+    } catch(err){
+        res.status(400).send(err);
+    }
+})
 
 
 app.listen(port, () => {

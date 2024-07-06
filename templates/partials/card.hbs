@@ -5,6 +5,7 @@
         padding-bottom: 1rem;
         padding-right: 1rem;
         border: 1px solid black;
+        border-radius: 3%;
         width: 18rem;
         height: 34rem;
     }
@@ -68,7 +69,7 @@
         <i class="fa-solid fa-heart heart-icon" onclick="toggleHeartBackground(event)"></i>
     </div>
     {{!-- {{brand}} --}}
-    <a href="/productDetails/{{id}}">
+    <a href="/productDetails/{{_id}}">
         <div class="content">
             <h3 class="limited-heading">{{name}}</h3>
             <p class="price" style="color:red">Rs. {{price}}</p>

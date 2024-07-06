@@ -3,7 +3,7 @@
 
 <head>
     {{>header}}
-    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="/css/products.css">
 </head>
 
 <body>
@@ -73,10 +73,20 @@
 
         </div>
         <div class="allproducts">
-           {{#each products}}
+            {{#if products.length}}
+            {{#each products}}
            {{>card this}}
            {{/each}}
 
+            {{else}}
+            <div class="empty">
+                <h2>Oops, No Products Found Here !!</h2>
+                <a href="/"><button class="btn btn-primary">Go To Home Page</button></a>
+                <a href="/searchPage"><button class="btn btn-primary">Search Your Beauty Favorite</button></a>
+                
+            </div>
+            {{/if}}
+           
         </div>
     </div>
 
