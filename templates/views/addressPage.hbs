@@ -1,0 +1,53 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    {{>header}}
+   <style>
+      .addresses{
+         padding: 4rem 7rem;
+         display: flex;
+         flex-wrap: wrap;
+         min-height: 80vh;
+
+      }
+      .address{
+         height: 22rem;
+         width: 22rem;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         border: 1px solid black;
+         border-radius: 3%;
+         margin: 2rem;
+      }
+      .addresses>a{
+         text-decoration: none;
+         color: black;
+         height: fit-content;
+      }
+   </style>
+ </head>
+ <body>
+    {{>navbar}}
+    <div class="addresses">
+      <a href="/addAddress"><div class="address">
+         <h2>+</h2>
+      </div></a>
+      {{#each address}}
+      <a href=""><div class="address">
+         <h2>{{fullname}}</h2>
+         <h3 style="color: rgb(14, 14, 84);">{{mnumber}}</h3>
+         <br>
+         <p>House No. - {{flat}} <br> Area - {{area}} <br>City - {{city}}</p>
+      </div></a>
+      {{/each}}
+    </div>
+    
+    {{>footer}}
+
+    <script>script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity = "sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin = "anonymous" >
+    </script>
+ </body>
+ </html>   

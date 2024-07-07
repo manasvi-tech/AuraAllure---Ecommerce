@@ -1,40 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {{>header}}
     <link rel="stylesheet" href="css/account.css">
 </head>
+
 <body>
     {{>navbar}}
 
-    <div class="account-container">
+    {{!-- <div class="account-container">
         <div class="collapse-container">
             <div class="user-icon">
-            <i style ="font-size:5rem" class="fa-regular fa-user"></i>
+                <i style="font-size:5rem" class="fa-regular fa-user"></i>
             </div>
             <div class="user-options">
                 <ul>
-                    <a href="/wishlist"><li>Wishlist</li></a>
+                    <a href="/wishlist">
+                        <li>Wishlist</li>
+                    </a>
                     <hr>
-                    <a href=""><li>Addresses</li></a>
+                    <a href="">
+                        <li>Addresses</li>
+                    </a>
                     <hr>
-                    <a href=""><li>Favourites</li></a>
+                    <a href="">
+                        <li>Favourites</li>
+                    </a>
                     <hr>
-                    <a href="/cart"><li>Cart</li></a>
+                    <a href="/cart">
+                        <li>Cart</li>
+                    </a>
                     <hr>
-                    <a href=""><li>Order History</li></a>
+                    <a href="">
+                        <li>Order History</li>
+                    </a>
                     <hr>
-                    <a href="/logout"><li>Log Out</li></a>
+                    <a href="/logout">
+                        <li>Log Out</li>
+                    </a>
                 </ul>
             </div>
         </div>
         <div class="details-container">
-            
+
         </div>
+    </div> --}}
+    <div class="content">
+        <h2>Hello, {{name}}</h2>
+        <div class="options">
+            <div class="option">
+                <a href="/wishlist">
+                    <h3 style="color:red"><i class="fa-regular fa-heart" style="color:red"></i>WishList</h3>
+                    <p>View products liked by you</p>
+                </a>
+            </div>
+            <div class="option">
+                <a href="/cart">
+                    <h3 style="color: rgb(138, 138, 33);"><i class="fa-solid fa-cart-shopping"
+                            style="color: rgb(138, 138, 33);"></i>Cart</h3>
+                    <p>View Shortlisted Items</p>
+                </a>
+            </div>
+            <div class="option">
+                <a href="">
+                    <h3 style="color: rgb(85, 21, 21);"><i class="fa-solid fa-boxes-stacked"
+                            style="color: rgb(85, 21, 21);"></i>Order History</h3>
+                    <p>View items ordered by you in the past</p>
+                </a>
+            </div>
+            <div class="option">
+                <a href="/addressPage">
+                    <h3 style="color: rgb(14, 14, 86);"><i class="fa-solid fa-location-dot"
+                            style="color: rgb(14, 14, 86);"></i>Address</h3>
+                    <p>View items ordered by you in the past</p>
+                </a>
+            </div>
+            {{#if isAdmin}}
+            <div class="option">
+                <a href="/newProductAdmin">
+                    <h3 style="color: rgb(68, 68, 188);"> <i style="color: rgb(68, 68, 188);"
+                            class="fa-solid fa-add"></i>Add Product</h3>
+                    <p>Add a new Product and its Details</p>
+                </a>
+            </div>
+
+            {{/if}}
+            <div class="option">
+                <a href="/logout">
+                    <h3><i class="fa-solid fa-backward"></i>Log Out</h3>
+                    <p>Log Out from this account</p>
+                </a>
+            </div>
+
+
+        </div>
+
     </div>
     {{>footer}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 </body>
+
 </html>

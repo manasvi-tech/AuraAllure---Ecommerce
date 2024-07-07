@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{>header}}
+    <link rel="stylesheet" href="/css/newProduct.css">
+</head>
+<body>
+    {{>navbar}}
+    <div class="product_container">
+        <h2>Add a New Shipping Address</h2>
+        <hr>
+        <form action="/addAddress" method="POST">
+            <label for="fullname"><b>Name</b></label>
+            <input type="text" placeholder="Enter Full Name" name="fullname" id="fullname" required>
+
+            <label for="mnumber"><b>Mobile Number</b></label>
+            <input type="number" placeholder="Enter Mobile Number" name="mnumber" id="mnumber" required>
+
+            <label for="pincode"><b>Pincode</b></label>
+            <input type="number" placeholder="Enter Pincode" name="pincode" id="pincode" required>
+
+            <label for="flat"><b>Flat, House no., Building, Company, Apartment</b></label>
+            <input type="text" placeholder="Flat, House no., Building, Company, Apartment" name="flat" id="flat" required>
+
+            <label for="area"><b>Area, Street, Sector, Village</b></label>
+            <input type="text" placeholder="Area, Street, Sector, Village" name="area" id="area" required>
+
+            <label for="city"><b>Town/City</b></label>
+            <input type="text" placeholder="Town/City" name="city" id="city" required>
+
+            <button type="submit" class="addProduct">Add Address</button>
+        </form>
+    </div>
+    {{>footer}}
+</body>
+</html>

@@ -86,15 +86,32 @@
 </div>
 
 <script>
-        function toggleHeartBackground(event) {
-            const heartIcon = event.target
-            {{!-- const heartIcon = document.querySelector('.heart-icon'); --}}
-            if (heartIcon.style.color == 'red') {
-                heartIcon.style.color = 'black';
-            } else {
-                heartIcon.style.color = 'red';
-            }
+    function toggleHeartBackground(event) {
+        const heartIcon = event.target
+        { { !-- const heartIcon = document.querySelector('.heart-icon'); --} }
+        if (heartIcon.style.color == 'red') {
+            heartIcon.style.color = 'black';
+        } else {
+            heartIcon.style.color = 'red';
         }
+    }
 
-    </script>
 
+    function limitWords(text, limit) {
+        const words = text.split(' ');
+        if (words.length > limit) {
+            return words.slice(0, limit).join(' ') + '...';
+        }
+        return text;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const headings = document.querySelectorAll('.limited-heading');
+        headings.forEach(heading => {
+            const limitedText = limitWords(heading.innerText, 5); // Adjust the limit as needed
+            heading.innerText = limitedText;
+        });
+    });
+
+
+</script>

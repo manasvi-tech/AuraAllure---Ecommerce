@@ -42,14 +42,10 @@
         padding-top: 2rem;
         justify-content: right;
         padding-right: 5rem;
+        font-size: 1.6rem;
 
     }
 
-    .product-info-quantity button {
-        padding: 10px;
-        font-size: 16px;
-        cursor: pointer;
-    }
 
     .product-info-quantity input {
         width: 50px;
@@ -81,33 +77,16 @@
             <p style="color: red;">Rs. {{price}}</p>
             <div class="buttons">
                 <a href="/moveToWishlist/{{_id}}"><button class="btn btn-primary">Move to Wishlist</button></a>
-                <a href="/removeProduct/{{_id}}"><button class="btn btn-danger">Remove from cart</button></a>
+                <a href="/removeFromCart/{{_id}}"><button class="btn btn-danger">Remove from cart</button></a>
             </div>
         </div>
 
     </a>
     <div class="product-quantity">
         <div class="product-info-quantity">
-            <button id="decrease">-</button>
+            <b>Quantity :</b>
             <input type="number" id="quantity" value="1" min="1" placeholder={{product.quantity}}>
-            <button id="increase">+</button>
         </div>
     </div>
 </div>
 
-<script>
-    document.getElementById('decrease').addEventListener('click', function (event) {
-        var quantity = document.getElementById('quantity');
-        var value = parseInt(quantity.value, 10);
-        if (value > 1) {
-            quantity.value = value - 1;
-        }
-    });
-
-    document.getElementById('increase').addEventListener('click', function (event) {
-        var quantity = document.getElementById('quantity');
-        var value = parseInt(quantity.value, 10);
-        quantity.value = value + 1;
-    });
-
-</script>

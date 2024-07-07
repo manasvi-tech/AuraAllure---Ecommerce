@@ -1,4 +1,5 @@
-.account-container{
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
+/* .account-container{
     min-height: 90vh;
     display: flex;
 }
@@ -26,10 +27,64 @@
     list-style: none;
     padding: 0.2rem 0.5rem;
     /* display: flex;
-    justify-content: center; */
+    justify-content: center; 
+}*/
+
+/* .user-options>ul>a{
+    text-decoration: none;
+} */ 
+/* body{
+    background-color:rgb(225, 211, 190)
+} */
+.content{
+    
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    min-height: 75vh;
+}
+.content>h2 {
+    font-family: "Playwrite NZ", cursive;
+    margin-bottom: 2rem;
+}
+.options{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 3rem ;
+    padding: 0 5rem;
+    justify-content: center;
+}
+.option>a{
+    text-decoration: none;
+    color: black;
+}
+.option>a>h3{
+    font-family: "Playwrite NZ", cursive;
+    font-weight: bold;
+    margin-bottom: 2rem;
 }
 
-.user-options>ul>a{
-    text-decoration: none;
+h3>.fa-solid, h3>.fa-regular{
+    font-size: 2.3rem;
+    margin-right: 1.5rem;
 }
+p{
+    letter-spacing: 0.2rem ;
+}
+.option{
+    padding: 3rem 2rem;
+    border: 1px solid black;
+    margin: 1rem 1rem;
+    border-radius: 4%;
+    width: 30rem;
+    box-shadow: 4px 4px 10px;
+    /* background-color:rgb(235, 232, 228) */
+}
+.option:hover {
+    transform: scale(1.1); /* Increase the scale to 1.1 times the original size */
+    transition: transform 0.3s ease; /* Smooth transition effect */
+}
+
+
 

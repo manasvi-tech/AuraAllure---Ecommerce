@@ -13,6 +13,7 @@ const jwt = require('jsonwebtoken');
 require("./db/conn");
 const Query = require("./models/query");
 const User = require("./models/User");
+const Address = require("./models/Address")
 const methodOverride = require("method-override");
 const { read } = require('fs');
 app.use(methodOverride("_method"));
@@ -42,7 +43,13 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/account-details', auth, (req, res) => {
-    res.render("account-details");
+    const user = req.user;
+    const firstname = user.firstname;
+    const isAdmin = user.isAdmin
+    res.render("account-details", {
+        name: firstname,
+        isAdmin: isAdmin
+    });
 })
 
 app.get('/searchPage', async (req, res) => {
@@ -130,7 +137,7 @@ app.post('/register', async (req, res) => {
             isAdmin: false,
             products: [],
             orderHistory: [],
-            wishlist:[]
+            wishlist: []
         });
 
         const exists = await User.findOne({ email: req.body.email });
@@ -251,50 +258,91 @@ app.get('/buy/:id', auth, async (req, res) => {
 
 })
 
-app.get('/removeProduct/:id',auth,async(req,res)=>{
-    try{
+app.get('/removeFromCart/:id', auth, async (req, res) => {
+    try {
         const user = req.user;
         const itemid = req.params.id;
 
         const index = user.products.indexOf(itemid);
-        if(index>-1){
-            user.products.splice(index,1);
+        if (index > -1) {
+            user.products.splice(index, 1);
             console.log("product removed")
         }
-        
+
         const result = await user.save();
         const products = await Product.find({ _id: { $in: user.products } });
-        console.log(products)
+        // console.log(products)
 
-        res.render('cart',{
-            products:products
+        res.render('cart', {
+            products: products
         })
-    
 
-    }catch(err){
+
+    } catch (err) {
         res.status(400).send(err)
     }
 });
 
-app.get('/moveToWishlist/:id',auth,async(req,res)=>{
-    try{
+app.get('/moveToWishlist/:id', auth, async (req, res) => {
+    try {
         const itemid = req.params.id;
-        const user = req.user; 
+        const user = req.user;
         const index = user.products.indexOf(itemid);
         console.log(index)
-        if(index>-1){
-            user.products.splice(index,1);
+        if (index > -1) {
+            user.products.splice(index, 1);
             console.log("product removed")
         }
 
-        if(!user.wishList.includes(itemid)){
+        if (!user.wishList.includes(itemid)) {
             user.wishList.push(itemid);
         }
+        const wishlist = await Product.find({ _id: { $in: user.wishList } });
 
         await user.save();
+        res.status(200).render('wishlist', {
+            products: wishlist
+        })
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
+
+// app.get('/checkout', auth, async (req, res) => {
+//     try {
+//         const user = req.user;
+//         const = new Address({
+//             firstname: req.body.firstname,
+//             lastname: req.body.lastname,
+//             email: req.body.email,
+//             gender: req.body.gender,
+//             password: req.body.password,
+//             cpass: req.body.cpass,
+//             isAdmin: false,
+//             products: [],
+//             orderHistory: [],
+//             wishlist: []
+//         });
+
+//     } catch (err) {
+
+//     }
+// })
+
+app.post('/checkout', auth, async(req,res)=>{
+    try{
+        console.log('checkout');
+        const user = req.user;
+        const amount = req.body.finalAmount;
+        const address = await Address.find({_id : {$in: user.address}})
+        console.log('address');
+        res.render('checkout',{
+            address:address
+        })
 
     }catch(err){
-        res.status(400).send(err);
+
     }
 })
 
@@ -310,6 +358,7 @@ app.get('/newProductAdmin', async (req, res) => {
         res.status(400).send(err)
     }
 })
+
 
 app.post('/newProduct', async (req, res) => {
 
@@ -345,7 +394,7 @@ app.post('/newProduct', async (req, res) => {
 
 app.get('/editAdmin/:id', async (req, res) => {
     try {
-        console.log("here")
+        // console.log("here")
         const _id = req.params.id;
         const product = await Product.findOne({ _id: _id });
 
@@ -391,7 +440,7 @@ app.post('/editItem/:id', async (req, res) => {
 
 app.get('/deleteAdmin/:id', async (req, res) => {
     try {
-        console.log("here")
+        // console.log("here")
         const _id = req.params.id;
         const product = await Product.findOne({ _id: _id });
 
@@ -428,26 +477,26 @@ app.delete('/deleteItem/:id', async (req, res) => {
 
 //wishlist functionalities
 
-app.get('/wishlist',auth,async(req,res)=>{
-    try{
-        const user=req.user;
+app.get('/wishlist', auth, async (req, res) => {
+    try {
+        const user = req.user;
         // const wishList = user.wishList;
         const wishListItems = await Product.find({ _id: { $in: user.wishList } });
         console.log(wishListItems);
 
 
 
-        res.render('products',{
-            products:wishListItems
+        res.render('wishlist', {
+            products: wishListItems
         })
     }
-    catch(err){
+    catch (err) {
         res.status(400).send(err);
     }
 })
 
-app.get('/addProductWish/:id',auth,async(req,res)=>{
-    try{
+app.get('/addProductWish/:id', auth, async (req, res) => {
+    try {
         const user = req.user;
         const itemId = req.params.id;
         console.log(itemId)
@@ -457,22 +506,101 @@ app.get('/addProductWish/:id',auth,async(req,res)=>{
         if (!product || product.quantity == 0) {
             res.status(400).send('Product does not exist')
         }
-        if(!user.wishList.includes(itemId)){
+        if (!user.wishList.includes(itemId)) {
             user.wishList.push(product._id);
             console.log("Pushed")
         }
         const wishListItems = await Product.find({ _id: { $in: user.wishList } });
         console.log(wishListItems)
-        res.render('products',{
-            products:wishListItems
+        res.render('products', {
+            products: wishListItems
         })
 
         await user.save();
 
-    } catch(err){
+    } catch (err) {
         res.status(400).send(err);
     }
 })
+
+app.get('/removeFromWishlist/:id', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const itemid = req.params.id;
+
+        const index = user.wishList.indexOf(itemid);
+        if (index > -1) {
+            user.wishList.splice(index, 1);
+            console.log("product removed")
+        }
+        await user.save();
+
+        const products = await Product.find({ _id: { $in: user.wishList } });
+        res.render('wishlist', {
+            products: products
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+
+//address functionalities
+app.get('/addressPage', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const address = await Address.find({_id : {$in: user.address}})
+        console.log(address);
+        res.render('addressPage',{
+            address:address
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
+
+
+app.get('/addAddress', auth, async (req, res) => {
+    try {
+        res.render('addAddress')
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.post('/addAddress', auth, async (req, res) => {
+    try {
+        // console.log("In address page")
+        const user = req.user;
+        const registerAddress = new Address({
+            fullname: req.body.fullname,
+            mnumber: req.body.mnumber,
+            pincode: req.body.pincode,
+            flat: req.body.flat,
+            area: req.body.area,
+            city: req.body.city
+        });
+        // console.log(user);
+
+        const registered = await registerAddress.save();
+        const itemId = registered._id;
+        console.log(itemId);
+
+        if(!user.address.includes(itemId)){
+            // console.log("Pushing the id")
+            user.address.push(itemId);
+            // console.log("pushed")
+        }
+        await user.save();
+        
+        res.render('account-details',{
+            name:user.firstname
+        });
+    } catch (err) {
+        res.status(500).send("An error occurred while saving the address");
+    }
+});
+
 
 
 app.listen(port, () => {

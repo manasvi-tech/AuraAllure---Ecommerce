@@ -1,0 +1,98 @@
+<style>
+    .column {
+        margin: 5px 8px;
+        padding-left: 1rem;
+        padding-bottom: 1rem;
+        padding-right: 1rem;
+        border: 1px solid black;
+        border-radius: 3%;
+        width: 18rem;
+        height: 36rem;
+    }
+
+    .img-container {
+        position: relative;
+        /* Needed for positioning the heart icon */
+        width: 100%;
+        height: 20rem;
+        overflow: hidden;
+        /* Hide overflow to ensure image fits within the box */
+    }
+
+    .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* 
+        Ensure the image covers the container */
+    }
+    .column>h3 {
+        text-transform: uppercase;
+    }
+
+    .column>a {
+        text-decoration: none;
+        color: black;
+        position: relative;
+    }
+
+
+
+    @media(max-width: 768px) {
+        .img-container img {
+            max-width: 8rem;
+            max-height: 20rem;
+            margin: 2px;
+        }
+
+        .column {
+            max-width: 8rem;
+        }
+    }
+    
+    .wish{
+        font-size:1.1rem;
+        padding:0.3rem 0.7rem;
+    }
+    .content{
+        min-height: 11rem;
+    }
+
+</style>
+
+
+<div class="column">
+    <div class="img-container">
+        <img src="{{imageUrl}}" alt="Product Image">
+        <i class="fa-solid fa-heart heart-icon" onclick="toggleHeartBackground(event)"></i>
+    </div>
+    {{!-- {{brand}} --}}
+    <a href="/productDetails/{{_id}}">
+        <div class="content">
+            <h3 class="limited-heading">{{name}}</h3>
+            <p class="price" style="color:red">Rs. {{price}}</p>
+        </div>
+        <div class ='remove'> 
+            {{!-- <a href=""><button class=" btn-success wish">Add to Cart</button></a> --}}
+            <a  class="buttona" href="/removeFromWishlist/{{_id}}"><button style="border-radius:8%" class="btn-danger wish">Remove from wishlist</button></a>
+            </div>
+    </a>
+</div>
+
+<script>
+function limitWords(text, limit) {
+    const words = text.split(' ');
+    if (words.length > limit) {
+        return words.slice(0, limit).join(' ') + '...';
+    }
+    return text;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const headings = document.querySelectorAll('.limited-heading');
+    headings.forEach(heading => {
+        const limitedText = limitWords(heading.innerText, 5); // Adjust the limit as needed
+        heading.innerText = limitedText;
+    });
+});
+</script>

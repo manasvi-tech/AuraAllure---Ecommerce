@@ -3,43 +3,114 @@
 
 <head>
     {{>header}}
-    <style>
-        .content{
-            min-height: 80vh
-        }
-        .empty {
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .empty>a>button {
-            font-size: 1.5rem;
-            background-color: #212a2f;
-            margin-top: 2rem;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/cart.css">
 </head>
 
 <body>
-
     {{>navbar}}
-    <div class="content">
-        {{#if products.length}}
+    <div class="cart">
+        <div class="cart-content">
 
-        {{else}}
-        <div class="empty">
-            <h2 style="color: rgb(86, 79, 79); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Seems like your cart is empty!!!!!!</h2>
-            <a href="/"><button class="btn btn-success">Go To Home Page</button></a>
+            <div class="content">
+                {{#if products.length}}
+
+                {{else}}
+                <div class="empty">
+                    <h2
+                        style="color: rgb(86, 79, 79); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                        Seems like your cart is empty!!!!!!</h2>
+                    <a href="/"><button class="btn btn-success">Go To Home Page</button></a>
+                </div>
+                {{/if}}
+                {{#each products}}
+                <div class="cardPartial">
+                    <div class="product-image">
+                        <img src={{imageUrl}} alt="">
+                    </div>
+                    <a href="/productDetails/{{_id}}">
+                        <div class="product-info">
+                            <h3>{{name}}</h3>
+                            <p style="color: red;" class="product-price">Rs. {{price}}</p>
+                            <div class="buttons">
+                                <a href="/moveToWishlist/{{_id}}"><button class="btn btn-primary">Move to
+                                        Wishlist</button></a>
+                                <a href="/removeFromCart/{{_id}}"><button class="btn btn-danger">Remove from
+                                        cart</button></a>
+                            </div>
+                        </div>
+
+                    </a>
+                    <div class="product-quantity">
+                        <div class="product-info-quantity">
+                            <b>Edit Quantity :</b>
+                            <input type="number" class="quantity-input" value="1" min="1" data-price="{{price}}"
+                                placeholder="{{product.quantity}}">
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
         </div>
-        {{/if}}
-        {{#each products}}
-        {{>cartPartial this}}
-        {{/each}}
+        <div class="bill">
+            <h3>Cart Summary</h3>
+            <form action="/checkout" method="post">
+                <div class="total">
+                    <p><b>Total Price: Rs. <span id="total-price">0 </span></b> </p>
+                    <p><b>GST (18%): Rs. <span id="gst-amount">0</span></b> </p>
+                    <p><b>Final Amount: Rs. <span id="final-amount">0</span></b> </p>
+
+                    <input type="hidden" name="finalAmount" id="final-amount-input" value="0">
+
+                    <button class="btn btn-success" style="width: 100%;" type="submit">Checkout</button>
+                </div>
+            </form>
+        </div>
     </div>
     {{>footer}}
 </body>
 
 </html>
+<script>script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity = "sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin = "anonymous" >
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        function calculateTotalPrice() {
+            const prices = document.querySelectorAll('.product-price');
+            let total = 0;
+            prices.forEach(priceElement => {
+                const priceText = priceElement.textContent.replace('Rs. ', '').trim();
+                const price = parseFloat(priceText);
+                if (!isNaN(price)) {
+                    total += price;
+                }
+            });
+
+            const gst = total * 0.18; // 18% GST
+            const finalAmount = total + gst;
+
+            document.getElementById('total-price').textContent = total.toFixed(2);
+            document.getElementById('gst-amount').textContent = gst.toFixed(2);
+            document.getElementById('final-amount').textContent = finalAmount.toFixed(2);
+
+            // Update the hidden input field
+            document.getElementById('final-amount-input').value = finalAmount.toFixed(2);
+        }
+
+        calculateTotalPrice();
+
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                const unitPrice = parseFloat(input.getAttribute('data-price'));
+                const quantity = parseInt(input.value, 10);
+                if (!isNaN(unitPrice) && !isNaN(quantity) && quantity > 0) {
+                    const productPriceElement = input.closest('.cardPartial').querySelector('.product-price');
+                    productPriceElement.textContent = `Rs. ${(unitPrice * quantity).toFixed(2)}`;
+                    calculateTotalPrice();
+                }
+            });
+        });
+    });
+</script>

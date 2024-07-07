@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>header}}
+    <link rel="stylesheet" href="/css/products.css">
+</head>
+
+<body>
+    {{>navbar}}
+    <div class="filters-shortcut" style="width:100vw; padding-left:70vw;background-color:blanchedalmond">
+        <div style="font-size: 1.5rem;">Filters<span style="margin-left:20px"><a><i class="fa-solid fa-chevron-up"></i></a></span></div>
+        {{!-- <span><a><i class="fa-solid fa-chevron-up"></i></a></span> --}}
+    </div>
+    <div class="products-page">
+        <div class="filter">
+            <!-- Product Type Filter -->
+            <div class="filter-group">
+                <div class="options">
+                    <label class="heading">Brands</label>
+                    <div class="option">
+                        <input type="checkbox" id="MayBelline" name="product-brand" value="MayBelline">
+                        <label for="MayBelline">MayBelline</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="L'Oreal" name="product-brand" value="L'Oreal">
+                        <label for="L'Oreal">Loreal</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="Lakme" name="product-brand" value="Lakme">
+                        <label for="Lakme">Lakme</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="MAC" name="product-brand" value="MAC">
+                        <label for="MAC">MAC</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Range Filter -->
+            <div class="filter-group">
+                <label class="heading">Price Range</label>
+                <div class="range-inputs">
+                    <input type="number" id="min-price" name="min-price" placeholder="Min">
+                    <input type="number" id="max-price" name="max-price" placeholder="Max">
+                </div>
+
+            </div>
+
+            <!-- Ratings Filter -->
+            <div class="filter-group">
+                <div class="options">
+                    <labe class="heading">Ratings</labe>
+                    <div class="option">
+                        <input type="checkbox" id="4-stars" name="ratings" value="4-stars">
+                        <label for="4-stars">4 Stars & Up</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="4-stars" name="ratings" value="4-stars">
+                        <label for="3-stars">3 Stars & Up</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="4-stars" name="ratings" value="4-stars">
+                        <label for="2-stars">2 Stars & Up</label>
+                    </div>
+                    <div class="option">
+                        <input type="checkbox" id="4-stars" name="ratings" value="4-stars">
+                        <label for="1-stars">1 Stars & Up</label>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="allproducts">
+            {{#if products.length}}
+            {{#each products}}
+           {{>wishlistCard this}}
+           {{/each}}
+
+            {{else}}
+            <div class="empty">
+                <h2>Oops, No Products Found Here !!</h2>
+                <a href="/"><button class="btn btn-primary">Go To Home Page</button></a>
+                <a href="/searchPage"><button class="btn btn-primary">Search Your Beauty Favorite</button></a>
+                
+            </div>
+            {{/if}}
+           
+        </div>
+    </div>
+
+    {{>footer}}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
