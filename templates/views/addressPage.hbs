@@ -24,7 +24,7 @@
       .addresses>a{
          text-decoration: none;
          color: black;
-         height: fit-content;
+         max-height: 22rem;
       }
    </style>
  </head>
@@ -35,12 +35,16 @@
          <h2>+</h2>
       </div></a>
       {{#each address}}
-      <a href=""><div class="address">
+      <div class="address">
          <h2>{{fullname}}</h2>
          <h3 style="color: rgb(14, 14, 84);">{{mnumber}}</h3>
          <br>
-         <p>House No. - {{flat}} <br> Area - {{area}} <br>City - {{city}}</p>
-      </div></a>
+         <p style="font-size: 1.2rem;"> {{flat}}, {{area}}, {{city}}</p>
+         <form action="/deleteAddress/{{_id}}?_method=DELETE" method="POST">
+         <br>
+         <button type='submit' class="btn btn-danger">Delete Address</button>
+         </form>
+      </div>
       {{/each}}
     </div>
     

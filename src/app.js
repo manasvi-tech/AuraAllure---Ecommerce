@@ -330,18 +330,18 @@ app.get('/moveToWishlist/:id', auth, async (req, res) => {
 //     }
 // })
 
-app.post('/checkout', auth, async(req,res)=>{
-    try{
+app.post('/checkout', auth, async (req, res) => {
+    try {
         console.log('checkout');
         const user = req.user;
         const amount = req.body.finalAmount;
-        const address = await Address.find({_id : {$in: user.address}})
+        const address = await Address.find({ _id: { $in: user.address } })
         console.log('address');
-        res.render('checkout',{
-            address:address
+        res.render('checkout', {
+            address: address
         })
 
-    }catch(err){
+    } catch (err) {
 
     }
 })
@@ -549,10 +549,10 @@ app.get('/removeFromWishlist/:id', auth, async (req, res) => {
 app.get('/addressPage', auth, async (req, res) => {
     try {
         const user = req.user;
-        const address = await Address.find({_id : {$in: user.address}})
+        const address = await Address.find({ _id: { $in: user.address } })
         console.log(address);
-        res.render('addressPage',{
-            address:address
+        res.render('addressPage', {
+            address: address
         })
     } catch (err) {
         res.status(400).send(err);
@@ -586,21 +586,47 @@ app.post('/addAddress', auth, async (req, res) => {
         const itemId = registered._id;
         console.log(itemId);
 
-        if(!user.address.includes(itemId)){
+        if (!user.address.includes(itemId)) {
             // console.log("Pushing the id")
             user.address.push(itemId);
             // console.log("pushed")
         }
         await user.save();
-        
-        res.render('account-details',{
-            name:user.firstname
+
+        res.render('account-details', {
+            name: user.firstname
         });
     } catch (err) {
         res.status(500).send("An error occurred while saving the address");
     }
 });
 
+app.delete('/deleteAddress/:id', auth, async (req, res) => {
+    try {
+        const itemId = req.params.id;
+        const user = req.user;
+        const result = await Address.findByIdAndDelete(itemId);
+        if (!result)
+            console.log("address not found")
+
+        const index = user.address.indexOf(itemId);
+        if (index > -1) {
+            user.address.splice(index, 1);
+            console.log("product removed")
+        }
+
+        const address = await Address.find({_id:{$in:user.address}});
+        res.render('addressPage',{
+            address:address
+        })
+
+    }catch(err){
+        res.status(400).send(err);
+    }
+
+
+
+})
 
 
 app.listen(port, () => {
