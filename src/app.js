@@ -69,7 +69,7 @@ app.get('/searchPage', async (req, res) => {
 app.get('/products', auth, async (req, res) => {
     try {
         const products = await Product.find().skip(16).limit(14);
-        console.log(products);
+        // console.log(products);
         res.status(200).render('products', {
             products: products
         });
@@ -336,7 +336,7 @@ app.post('/checkout', auth, async (req, res) => {
         const user = req.user;
         const amount = req.body.finalAmount;
         const address = await Address.find({ _id: { $in: user.address } })
-        console.log('address');
+        // console.log('address');
         res.render('checkout', {
             address: address
         })
@@ -512,7 +512,7 @@ app.get('/addProductWish/:id', auth, async (req, res) => {
         }
         const wishListItems = await Product.find({ _id: { $in: user.wishList } });
         console.log(wishListItems)
-        res.render('products', {
+        res.render('wishlist', {
             products: wishListItems
         })
 
@@ -584,7 +584,7 @@ app.post('/addAddress', auth, async (req, res) => {
 
         const registered = await registerAddress.save();
         const itemId = registered._id;
-        console.log(itemId);
+        // console.log(itemId);
 
         if (!user.address.includes(itemId)) {
             // console.log("Pushing the id")
