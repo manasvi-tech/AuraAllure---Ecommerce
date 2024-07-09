@@ -10,18 +10,20 @@ const auth = require('./middleware/auth')
 const Product = require("./models/Product");
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const stripe = require('stripe').Stripe(process.env.STRIPE_PRIVATE_KEY)
 require("./db/conn");
 const Query = require("./models/query");
 const User = require("./models/User");
 const Address = require("./models/Address")
-const methodOverride = require("method-override");
+const methodOverride = require("method-override");  // DELETE AND UPDATE REQUEST CANT BE MADE DIRECTLY THUS THIS
 const { read } = require('fs');
+
 app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })) // i want to get all the data of the form
 
-const staticPath = path.join(__dirname, "../public");
+const staticPath = path.join(__dirname, "../public"); //CLIENT SIDE CODE IS HERE
 const templatePath = path.join(__dirname, "../templates/views");
 const partialsPath = path.join(__dirname, "../templates/partials");
 
@@ -473,7 +475,42 @@ app.delete('/deleteItem/:id', async (req, res) => {
 
 })
 
+app.get('/deleteUserAdmin', (req, res) => {
+    res.status(200).render('deleteUserAdmin');
+})
 
+app.post('/deleteUserAdmin', async (req, res) => {
+    try {
+        const email = req.body.email;
+        const user = await User.findOne({
+            email: email
+        })
+
+        if (!user) console.log("user not found")
+
+        else {
+            // console.log(user);
+            res.render('deleteUserAdmin', {
+                user: user
+            })
+        }
+    } catch (err) {
+        res.status(400).send(err)
+    }
+
+})
+
+app.delete('/deleteUserAdmin/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const result = await User.findByIdAndDelete(itemId);
+        if (!result) console.log("user wasnt found")
+
+        res.render('account-details')
+    } catch (err) {
+        res.status(400).send(err);
+    }
+})
 
 //wishlist functionalities
 
@@ -615,12 +652,12 @@ app.delete('/deleteAddress/:id', auth, async (req, res) => {
             console.log("product removed")
         }
 
-        const address = await Address.find({_id:{$in:user.address}});
-        res.render('addressPage',{
-            address:address
+        const address = await Address.find({ _id: { $in: user.address } });
+        res.render('addressPage', {
+            address: address
         })
 
-    }catch(err){
+    } catch (err) {
         res.status(400).send(err);
     }
 

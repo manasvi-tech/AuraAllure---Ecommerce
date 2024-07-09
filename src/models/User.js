@@ -22,6 +22,7 @@ const userSchema = mongoose.Schema({
                 throw new Error("Please enter correct Email")
             }
         },
+        unique:true
     },
 
     password: {

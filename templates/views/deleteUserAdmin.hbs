@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{>header}}
+    {{!-- <link rel="stylesheet" href="css/account.css"> --}}
+    <style>
+        .total{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .total>h2{
+            margin: 2rem 0;
+            font-size: 2.4rem;
+        
+            color: brown;
+        }
+        form{
+            margin: 1rem;
+            display: flex;
+
+        }
+        form input[type=text]{
+            font-size: 1.3rem;
+            padding: 0 7px;
+        }
+
+        form label{
+            font-size: 1.4rem;
+            padding: 2px 7px;
+        }
+
+        .submit{
+            padding: 5px;
+            margin: 0 6px;
+            font-size: 1.3rem;
+        }
+
+        .admin{
+            padding: 5px;
+            margin-top: 10px;
+            {{!-- margin-left: 8px; --}}
+            font-size: 1.3rem;
+        }
+
+        .user-details{
+            margin: 5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            justify-content: center;
+            width: 40%
+        }
+        .user-details>h2{
+            color: red;
+            font-size: 2.4rem;
+        }
+    </style>
+</head>
+<body>
+    {{>navbar}}
+    <div class="total">
+        
+        <h2>Enter the email Id of the User You Want to Delete</h2>
+        <form action="/deleteUserAdmin" method="POST">
+        {{!-- <label for="email">Email</label> --}}
+        <input type="text" name="email" placeholder="Enter Email">
+        <button type="submit" class="btn btn-success submit ">SUBMIT</button>
+
+        
+        </form>
+        {{!-- {{user}} --}}
+        {{#if user}}
+        <div class="user-details">
+            <h3>Details of the User</h3>
+            <p> First Name : {{user.firstname}}</p>
+            <p> Last Name : {{user.lastname}}</p>
+            <p> Email : {{user.email}}</p>
+
+            <h2>Are you sure you want to delete the account of the user</h2>
+            <a href="/deleteUserAdmin/{{user._id}}?method=DELETE"><button class="btn btn-danger admin">Delete </button></a>
+            <a href="/account-details"><button class="btn btn-success admin">No, Go Back </button></a>
+            
+        </div>
+        {{else}}
+            <p>User not found.</p>
+        {{/if}}
+    </div>
+    {{>footer}}
+</body>
+</html>
