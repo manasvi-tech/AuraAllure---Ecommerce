@@ -366,7 +366,7 @@ app.post('/newProduct', async (req, res) => {
 
     try {
         const registerProduct = new Product({
-            id: 982383,
+            id: req.body.id,
             name: req.body.name,
             price: req.body.price,
             originalPrice: req.body.org_price,
@@ -664,6 +664,54 @@ app.delete('/deleteAddress/:id', auth, async (req, res) => {
 
 
 })
+
+//search functionalities
+
+app.get('/productSearch', async(req,res)=>{
+    const search = req.query.q;
+    // console.log(search);
+    try{
+        const products = await Product.find({ name: { $regex: search, $options: 'i' } });
+        const brands = [...new Set(products.map(product => product.brand))]
+
+        res.render('products',{
+            products:products,
+            brands:brands,
+            searchedItem:search
+        })
+
+    } catch(err){
+        res.status(400).render(err);
+    }
+})
+
+app.post('/filters/:item', async (req, res) => {
+    const search = req.params.item; // Access route parameter
+    const brands = req.body.brands || [];
+    const minPrice = req.body.minPrice;
+    const maxPrice = req.body.maxPrice;
+
+    let products = await Product.find({ name: { $regex: search, $options: 'i' } });
+
+    if (brands.length > 0) {
+        products = products.filter(product => brands.includes(product.brand));
+    }
+
+    if (minPrice && !isNaN(parseFloat(minPrice))) {
+        products = products.filter(product => product.price >= parseFloat(minPrice));
+    }
+
+    if (maxPrice && !isNaN(parseFloat(maxPrice))) {
+        products = products.filter(product => product.price <= parseFloat(maxPrice));
+    }
+    
+    // Process form data and implement filtering logic here
+    res.status(400).render('products',{
+        products:products,
+        brands:brands,
+        searchedItem:search
+    })
+});
 
 
 app.listen(port, () => {

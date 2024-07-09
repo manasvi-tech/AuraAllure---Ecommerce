@@ -17,7 +17,7 @@
 
         .fa-star {
             margin-right: 0px;
-             color: #ffa41d;
+            color: #ffa41d;
             margin-bottom: 1rem;
         }
 
@@ -540,17 +540,12 @@
             const ratingElements = document.querySelectorAll('.rating');
             ratingElements.forEach(ratingElement => {
                 const rating = parseFloat(ratingElement.getAttribute('data-rating'));
-                const fullStars = Math.floor(rating);
-                const hasHalfStar = rating % 1 >= 0.5;
                 const stars = ratingElement.querySelectorAll('i');
 
                 stars.forEach((star, index) => {
-                    if (index < fullStars) {
+                    if (index < rating) {
                         star.classList.remove('fa-regular');
                         star.classList.add('fa-solid');
-                    } else if (index === fullStars && hasHalfStar) {
-                        star.classList.remove('fa-regular');
-                        star.classList.add('fa-star-half-alt'); // Using Font Awesome's half star class
                     }
                 });
             });

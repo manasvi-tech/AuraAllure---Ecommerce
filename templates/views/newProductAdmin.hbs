@@ -13,19 +13,22 @@
         <hr>
         <form action="/newProduct" method="POST">
             {{!-- <h3>Fill in the details here</h3> --}}
-            
+
+            <label for="id"><b>Id</b></label>
+            <input type="text" placeholder="Enter ID of the Product" name="id" id="id" required>
+
             <label for="name"><b>Name</b></label>
             <input type="text" placeholder="Enter Name Of the Product" name="name" id="name" required>
-           
+
             <label for="price"><b>Price</b></label>
             <input type="Number" placeholder="Enter Price Of the Product" name="price" id="name" required>
-           
+
             <label for="org_price"><b>Original Price</b></label>
             <input type="Number" placeholder="Enter Original Price Of the Product" name="org_price" id="name" required>
-            
+
             <label for="rating"><b>Rating</b></label>
             <input type="Number" placeholder="Enter Rating Of the Product" name="rating" id="name" required>
-           
+
             <label for="brand"><b>Brand</b></label>
             <input type="text" placeholder="Enter Brand Of the Product" name="brand" id="name" required>
 
@@ -34,15 +37,15 @@
             <label for="description"><b>Description</b></label>
             <textarea id="query" class="form-control" name="description" rows="4" cols="40"
                 placeholder="Enter Description of the Product"></textarea><br>
-           
-            
 
-            <label for="quantity" ><b style="margin-right: 8px;">Quantity</b></label>
+
+
+            <label for="quantity"><b style="margin-right: 8px;">Quantity</b></label>
             <input type="Number" placeholder="Enter Quantity Of the Product" name="quantity" id="name" required>
 
             <div class="under-sale">
-            <label for="onSale"> <b>Is the product under sale?</b></label>
-            <input type="checkbox" id="onSale" name="onSale">
+                <label for="onSale"> <b>Is the product under sale?</b></label>
+                <input type="checkbox" id="onSale" name="onSale">
             </div>
 
             <button type="submit" class="addProduct">Add Product</button>
