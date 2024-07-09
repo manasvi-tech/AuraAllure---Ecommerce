@@ -4,20 +4,27 @@
 <head>
     {{>header}}
     <style>
-        .buttons{
+        .buttons {
             display: flex;
             margin-top: 2rem;
         }
 
-        @media(max-width:768px){
-            .product-info-image{
+        @media(max-width:768px) {
+            .product-info-image {
                 padding: 2rem 5rem;
             }
         }
-        .stock{
+
+        .fa-star {
+            margin-right: 0px;
+             color: #ffa41d;
+            margin-bottom: 1rem;
+        }
+
+        .stock {
             color: red;
-            font-size:medium;
-            margin-top:2rem
+            font-size: medium;
+            margin-top: 2rem
         }
     </style>
     <style>
@@ -116,7 +123,7 @@
         }
 
 
-        .fa-solid {
+        .nav>fa-solid {
             margin-top: 7px;
             margin-right: 1.5rem;
             margin-bottom: 2px;
@@ -422,7 +429,7 @@
         .product-info-rating,
         .product-details>p {
 
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 768px) {
@@ -433,8 +440,7 @@
     </style>
 </head>
 
-<body>
-    {{>navbar}}
+<body>{{>navbar}}
     <div class="product-info-container">
         <div class="product-info-image">
             <img src="{{product.imageUrl}}" alt="Image Unavailable">
@@ -443,56 +449,72 @@
             <h2 class="product-info-heading">{{product.name}}</h2>
             <h3>{{product.brand}}</h3>
             <h3 class="product-info-price">Rs. {{product.price}}</h3>
-            <div class="product-info-rating">
+            <div class="rating" data-rating="{{product.rating}}">
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
             </div>
-
             <div class="product-info-description">
                 <p style="color:#212a2f">{{product.description}}</p>
             </div>
             <div class="product-info-quantity">
                 <button id="decrease">-</button>
-                <input type="number" id="quantity" value="1" min="1" placeholder={{product.quantity}}>
+                <input type="number" id="quantity" value="1" min="1" placeholder="{{product.quantity}}">
                 <button id="increase">+</button>
             </div>
-
-            {{#if  product.quantity}}
+            {{#if product.quantity}}
             {{else}}
-                <div class="stock" style="color: red; font-size:medium">
-                    OUT OF STOCK
-                </div>
+            <div class="stock" style="color: red; font-size: medium">
+                OUT OF STOCK
+            </div>
             {{/if}}
             <div class="buttons">
-                <a href="/addProductWish/{{product._id}}"><div class="btn btn-secondary">
-                    Add to Wishlist
-                </div></a>
-                <a href="/buy/{{product._id}}"><div class="btn btn-primary" id="buy" onclick="stockCheck()">
-                    Buy now
-                </div></a>
+                <a href="/addProductWish/{{product._id}}">
+                    <div class="btn btn-secondary">
+                        Add to Wishlist
+                    </div>
+                </a>
+                <a href="/buy/{{product._id}}">
+                    <div class="btn btn-primary" id="buy" onclick="stockCheck()">
+                        Buy now
+                    </div>
+                </a>
             </div>
-
-
             {{#if isAdmin}}
             <div class="buttons">
                 <div><a href="/deleteAdmin/{{product._id}}"><i class="fa-solid fa-trash"></i></a></div>
                 <div><a href="/editAdmin/{{product._id}}"><i class="fa-solid fa-pencil"></i></a></div>
             </div>
-            
-
             {{/if}}
         </div>
     </div>
-
     {{>footer}}
-
-    <script>script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity = "sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin = "anonymous" >
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
+        function toggleHeartBackground(event) {
+            const heartIcon = event.target;
+            if (heartIcon.style.color === 'red') {
+                heartIcon.style.color = 'black';
+            } else {
+                heartIcon.style.color = 'red';
+            }
+        }
+
+        function limitWords(text, limit) {
+            const words = text.split(' ');
+            if (words.length > limit) {
+                return words.slice(0, limit).join(' ') + '...';
+            }
+            return text;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set up increase and decrease buttons
             document.getElementById('decrease').addEventListener('click', function () {
                 var quantity = document.getElementById('quantity');
                 var value = parseInt(quantity.value, 10);
@@ -501,13 +523,42 @@
                 }
             });
 
-        document.getElementById('increase').addEventListener('click', function () {
-            var quantity = document.getElementById('quantity');
-            var value = parseInt(quantity.value, 10);
-            quantity.value = value + 1;
-        });
+            document.getElementById('increase').addEventListener('click', function () {
+                var quantity = document.getElementById('quantity');
+                var value = parseInt(quantity.value, 10);
+                quantity.value = value + 1;
+            });
 
+            // Limit words in headings
+            const headings = document.querySelectorAll('.limited-heading');
+            headings.forEach(heading => {
+                const limitedText = limitWords(heading.innerText, 3); // Adjust the limit as needed
+                heading.innerText = limitedText;
+            });
+
+            // Set rating stars
+            const ratingElements = document.querySelectorAll('.rating');
+            ratingElements.forEach(ratingElement => {
+                const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                const stars = ratingElement.querySelectorAll('i');
+
+                stars.forEach((star, index) => {
+                    if (index < fullStars) {
+                        star.classList.remove('fa-regular');
+                        star.classList.add('fa-solid');
+                    } else if (index === fullStars && hasHalfStar) {
+                        star.classList.remove('fa-regular');
+                        star.classList.add('fa-star-half-alt'); // Using Font Awesome's half star class
+                    }
+                });
+            });
+        });
     </script>
+
+
+
 
 </body>
 

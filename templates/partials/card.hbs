@@ -49,7 +49,10 @@
         color: black;
     }
 
-
+    .fa-star{
+        margin-right: 0px;
+        color: #ffa41d;
+    }
 
     @media(max-width: 768px) {
         .img-container img {
@@ -73,29 +76,27 @@
         <div class="content">
             <h3 class="limited-heading">{{name}}</h3>
             <p class="price" style="color:red">Rs. {{price}}</p>
-            <div class="rating">
+            <div class="rating" data-rating="{{rating}}">
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
             </div>
-
         </div>
     </a>
 </div>
 
 <script>
     function toggleHeartBackground(event) {
-        const heartIcon = event.target
-        { { !-- const heartIcon = document.querySelector('.heart-icon'); --} }
+        const heartIcon = event.target;
+        // const heartIcon = document.querySelector('.heart-icon'); // This line is unnecessary
         if (heartIcon.style.color == 'red') {
             heartIcon.style.color = 'black';
         } else {
             heartIcon.style.color = 'red';
         }
     }
-
 
     function limitWords(text, limit) {
         const words = text.split(' ');
@@ -105,13 +106,26 @@
         return text;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Limit words in headings
         const headings = document.querySelectorAll('.limited-heading');
         headings.forEach(heading => {
-            const limitedText = limitWords(heading.innerText, 5); // Adjust the limit as needed
+            const limitedText = limitWords(heading.innerText, 3); // Adjust the limit as needed
             heading.innerText = limitedText;
         });
+
+        // Set rating stars
+        const ratingElements = document.querySelectorAll('.rating');
+        ratingElements.forEach(ratingElement => {
+            const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+            const stars = ratingElement.querySelectorAll('i');
+
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('fa-regular');
+                    star.classList.add('fa-solid');
+                }
+            });
+        });
     });
-
-
 </script>
