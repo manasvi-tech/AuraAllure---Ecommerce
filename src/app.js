@@ -8,6 +8,7 @@ const hbs = require('hbs');
 const bcrypt = require('bcrypt');
 const auth = require('./middleware/auth')
 const Product = require("./models/Product");
+const Cart = require("./models/Cart");
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const stripe = require('stripe').Stripe(process.env.STRIPE_PRIVATE_KEY)
@@ -80,28 +81,21 @@ app.get('/products', auth, async (req, res) => {
     }
 })
 
-app.get('/productDetails/:id', async (req, res) => {
+app.get('/productDetails/:id', auth, async (req, res) => {
     try {
+        console.log('in productDetails')
         const _id = req.params.id;
+        console.log(_id)
         const product = await Product.findOne({ _id: _id });
+        const user = req.user;
 
-        if (!product) {
-            res.status(404).send('Product not found')
-        }
-
-        const token = req.cookies.jwt;
-        console.log(token);
-
-        const verifyUser = jwt.verify(token, process.env.SECRET_KEY);
-
-        const user = await User.findOne({ _id: verifyUser._id }) //getting the details of that user
         const isAdmin = user.isAdmin
-        const email = user.email;
+
+        console.log(product);
 
         res.render('productDetails', {
             product: product,
             isAdmin: isAdmin,
-            email: email
         })
     } catch (err) {
         res.status(400).send(err);
@@ -224,35 +218,82 @@ app.get('/logout', auth, async (req, res) => {
 //cart functionalities
 
 app.get('/cart', auth, async (req, res) => {
-    const user = req.user;
-    const products = await Product.find({ _id: { $in: user.products } });
-    res.render('cart', {
-        products: products
-    })
+    try {
+        const user = req.user;
+    
+        async function productWithQuantity(cartItem) {
+            let obj = {
+                product: await Product.findOne({ _id: cartItem.product }),
+                quantity: cartItem.quantity
+            };
+            return obj;
+        }
+    
+        const cartProducts = await Cart.find({ user: user._id });
+        const productsWithQuantity = [];
+    
+        for (const cartItem of cartProducts) {
+            const product = await productWithQuantity(cartItem);
+            productsWithQuantity.push(product);
+        } //because Array.map doesnt work with asynchronous things
+    
+        // console.log(productsWithQuantity);
+    
+        res.render('cart', {
+            products: productsWithQuantity
+        });
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
 
 })
 
-app.get('/buy/:id', auth, async (req, res) => {
+app.post('/buy/:id', auth, async (req, res) => {
     try {
         const user = req.user;
         const productId = req.params.id;
-        const product = await Product.findOne({ _id: productId });
+        const quantity = req.body.quantity;
 
-        if (!product || product.quantity == 0) {
-            res.status(400).send('Product does not exist')
-        } else {
-            if (!user.products.includes(productId)) {
-                user.products.push(productId);
-            } else {
-                return res.status(400).send('Product already added to cart');
-            }
-            // Save the updated user
-            await user.save();
-            const products = await Product.find({ _id: { $in: user.products } });
-            res.render('cart', {
-                products: products
+        if (!user.products.includes(productId)) {
+
+            user.products.push(productId);
+
+            const registerCart = new Cart({
+                product: productId,
+                quantity: quantity,
+                user: user._id
             })
+            await registerCart.save();
+
+        } else {
+            return res.status(400).send('Product already added to cart');
         }
+
+        // Save the updated user
+        await user.save();
+        
+        async function productWithQuantity(cartItem) {
+            let obj = {
+                product: await Product.findOne({ _id: cartItem.product }),
+                quantity: cartItem.quantity
+            };
+            return obj;
+        }
+    
+        const cartProducts = await Cart.find({ user: user._id });
+        const productsWithQuantity = [];
+    
+        for (const cartItem of cartProducts) {
+            const product = await productWithQuantity(cartItem);
+            productsWithQuantity.push(product);
+        } //because Array.map doesnt work with asynchronous things
+    
+        // console.log(productsWithQuantity);
+    
+        res.render('cart', {
+            products: productsWithQuantity
+        });
 
     } catch (err) {
         res.status(400).send('account-details')
@@ -264,20 +305,40 @@ app.get('/removeFromCart/:id', auth, async (req, res) => {
     try {
         const user = req.user;
         const itemid = req.params.id;
+        console.log("removing from cart")
+        const product = await Cart.findOne({product:itemid});
 
-        const index = user.products.indexOf(itemid);
-        if (index > -1) {
-            user.products.splice(index, 1);
-            console.log("product removed")
+        if (product) {
+            const deletedProduct = await Cart.findOneAndDelete({ _id: product._id });
+            console.log("Product removed:");
+        } else {
+            console.log("Product not found");
         }
 
-        const result = await user.save();
-        const products = await Product.find({ _id: { $in: user.products } });
-        // console.log(products)
-
+        console.log("saved");
+        async function productWithQuantity(cartItem) {
+            let obj = {
+                product: await Product.findOne({ _id: cartItem.product }),
+                quantity: cartItem.quantity
+            };
+            // console.log(obj)
+            return obj;
+        }
+    
+        const cartProducts = await Cart.find({ user: user._id });
+        // console.log(cartProducts);
+        const productsWithQuantity = [];
+    
+        for (const cartItem of cartProducts) {
+            const product = await productWithQuantity(cartItem);
+            productsWithQuantity.push(product);
+        } //because Array.map doesnt work with asynchronous things
+    
+        // console.log(productsWithQuantity);
+    
         res.render('cart', {
-            products: products
-        })
+            products: productsWithQuantity
+        });       
 
 
     } catch (err) {
@@ -285,31 +346,6 @@ app.get('/removeFromCart/:id', auth, async (req, res) => {
     }
 });
 
-app.get('/moveToWishlist/:id', auth, async (req, res) => {
-    try {
-        const itemid = req.params.id;
-        const user = req.user;
-        const index = user.products.indexOf(itemid);
-        console.log(index)
-        if (index > -1) {
-            user.products.splice(index, 1);
-            console.log("product removed")
-        }
-
-        if (!user.wishList.includes(itemid)) {
-            user.wishList.push(itemid);
-        }
-        const wishlist = await Product.find({ _id: { $in: user.wishList } });
-
-        await user.save();
-        res.status(200).render('wishlist', {
-            products: wishlist
-        })
-
-    } catch (err) {
-        res.status(400).send(err);
-    }
-})
 
 // app.get('/checkout', auth, async (req, res) => {
 //     try {
@@ -340,7 +376,8 @@ app.post('/checkout', auth, async (req, res) => {
         const address = await Address.find({ _id: { $in: user.address } })
         // console.log('address');
         res.render('checkout', {
-            address: address
+            address: address,
+            amount: amount
         })
 
     } catch (err) {
@@ -667,20 +704,20 @@ app.delete('/deleteAddress/:id', auth, async (req, res) => {
 
 //search functionalities
 
-app.get('/productSearch', async(req,res)=>{
+app.get('/productSearch', async (req, res) => {
     const search = req.query.q;
     // console.log(search);
-    try{
+    try {
         const products = await Product.find({ name: { $regex: search, $options: 'i' } });
         const brands = [...new Set(products.map(product => product.brand))]
 
-        res.render('products',{
-            products:products,
-            brands:brands,
-            searchedItem:search
+        res.render('products', {
+            products: products,
+            brands: brands,
+            searchedItem: search
         })
 
-    } catch(err){
+    } catch (err) {
         res.status(400).render(err);
     }
 })
@@ -704,14 +741,17 @@ app.post('/filters/:item', async (req, res) => {
     if (maxPrice && !isNaN(parseFloat(maxPrice))) {
         products = products.filter(product => product.price <= parseFloat(maxPrice));
     }
-    
+
     // Process form data and implement filtering logic here
-    res.status(400).render('products',{
-        products:products,
-        brands:brands,
-        searchedItem:search
+    res.status(400).render('products', {
+        products: products,
+        brands: brands,
+        searchedItem: search
     })
 });
+
+// payment optionss
+
 
 
 app.listen(port, () => {

@@ -459,11 +459,7 @@
             <div class="product-info-description">
                 <p style="color:#212a2f">{{product.description}}</p>
             </div>
-            <div class="product-info-quantity">
-                <button id="decrease">-</button>
-                <input type="number" id="quantity" value="1" min="1" placeholder="{{product.quantity}}">
-                <button id="increase">+</button>
-            </div>
+
             {{#if product.quantity}}
             {{else}}
             <div class="stock" style="color: red; font-size: medium">
@@ -471,16 +467,18 @@
             </div>
             {{/if}}
             <div class="buttons">
-                <a href="/addProductWish/{{product._id}}">
-                    <div class="btn btn-secondary">
-                        Add to Wishlist
+                
+                <form action="/buy/{{product._id}}" method="POST">
+                    <div class="product-info-quantity">
+                        <button type="button" id="decrease">-</button>
+                        <input type="number" name="quantity" id="quantity" value="1" min="1"
+                            placeholder="{{product.quantity}}">
+                        <button type="button" id="increase">+</button>
                     </div>
-                </a>
-                <a href="/buy/{{product._id}}">
-                    <div class="btn btn-primary" id="buy" onclick="stockCheck()">
-                        Buy now
-                    </div>
-                </a>
+                    <button class="btn btn-primary" type="submit" id="buy">
+                        Add to Cart
+                    </button>
+                </form>
             </div>
             {{#if isAdmin}}
             <div class="buttons">

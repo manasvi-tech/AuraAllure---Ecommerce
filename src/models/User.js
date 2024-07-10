@@ -4,6 +4,18 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
+// const CartItemSchema = mongoose.Schema({
+//     item:{
+//         type: Schema.Types.ObjectId,
+//         ref: "Product"
+//     },
+//     quantity:{
+//         type:Number,
+//         required:true
+//     }
+
+// })
+
 const userSchema = mongoose.Schema({
     firstname: {
         type: String,
@@ -55,14 +67,14 @@ const userSchema = mongoose.Schema({
     products: [
         {
             type: Schema.Types.ObjectId,
-            ref: "Product",
+            ref: "Product"
         },
         
     ],
     orderHistory: [
         {
             type: Schema.Types.ObjectId,
-            ref: "OrderHistory",
+            ref: "OrderHistory"
         },
     ],
     wishList:[

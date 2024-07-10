@@ -1,52 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {{>header}}
     <link rel="stylesheet" href="/css/checkout.css">
-
+    <style>
+        .no-address{
+            height: 80%;
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
+
 <body>
     {{>navbar}}
     <div class="content">
         <div class="newAddress">
             <h2 style="margin: 2rem 0;">Add a new Shipping Address</h2>
-             <form action="/payment" method="POST">
-            <label for="fullname"><b>Name</b></label>
-            <input type="text" placeholder="Enter Full Name" name="fullname" id="fullname" required>
+            <form action="/payment/" method="POST">
+                <label for="fullname"><b>Name</b></label>
+                <input type="text" placeholder="Enter Full Name" name="fullname" id="fullname" required>
 
-            <label for="mnumber"><b>Mobile Number</b></label>
-            <input type="number" placeholder="Enter Mobile Number" name="mnumber" id="mnumber" required>
+                <label for="mnumber"><b>Mobile Number</b></label>
+                <input type="number" placeholder="Enter Mobile Number" name="mnumber" id="mnumber" required>
 
-            <label for="pincode"><b>Pincode</b></label>
-            <input type="number" placeholder="Enter Pincode" name="pincode" id="pincode" required>
+                <label for="pincode"><b>Pincode</b></label>
+                <input type="number" placeholder="Enter Pincode" name="pincode" id="pincode" required>
 
-            <label for="flat"><b>Flat, House no., Building, Company, Apartment</b></label>
-            <input type="text" placeholder="Flat, House no., Building, Company, Apartment" name="flat" id="flat" required>
+                <label for="flat"><b>Flat, House no., Building, Company, Apartment</b></label>
+                <input type="text" placeholder="Flat, House no., Building, Company, Apartment" name="flat" id="flat"
+                    required>
 
-            <label for="area"><b>Area, Street, Sector, Village</b></label>
-            <input type="text" placeholder="Area, Street, Sector, Village" name="area" id="area" required>
+                <label for="area"><b>Area, Street, Sector, Village</b></label>
+                <input type="text" placeholder="Area, Street, Sector, Village" name="area" id="area" required>
 
-            <label for="city"><b>Town/City</b></label>
-            <input type="text" placeholder="Town/City" name="city" id="city" required>
+                <label for="city"><b>Town/City</b></label>
+                <input type="text" placeholder="Town/City" name="city" id="city" required>
 
-            <button type="submit" class="addProduct">Proceed to Pay</button>
-        </form>
+                <button type="submit" class="addProduct">Proceed to Pay</button>
+            </form>
         </div>
+
         <div class="existingAddress">
+            {{#if address}}
             <h2 style="margin: 2rem 0;">Use existing Address</h2>
             {{#each address}}
-            <a href=""><div class="add">
-                <h3>{{fullname}}</h3>
-                <p>{{mnumber}}</p>
-                <p>{{flat}}, {{area}}, {{city}}</p>
-            </div></a>
+            <form href="">
+                <div class="add">
+                    <h3>{{fullname}}</h3>
+                    <p>{{mnumber}}</p>
+                    <p>{{flat}}, {{area}}, {{city}}</p>
+                </div>
+            </form>
             {{/each}}
+            {{else}}
+            <div class="no-address">
+            <h2>Uh-oh, No saved addresses</h2>
+            </div>
+            {{/if}}
         </div>
 
     </div>
     {{>footer}}
-     <script>script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script>script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity = "sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin = "anonymous" >
     </script>
 </body>
+
 </html>
