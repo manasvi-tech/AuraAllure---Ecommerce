@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .address, .items, .total, .payment-btn {
+            margin-bottom: 20px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .item span {
+            flex-basis: 45%;
+        }
+        .total {
+            font-size: 1.2em;
+            text-align: right;
+        }
+        .payment-btn {
+            text-align: center;
+        }
+        .payment-btn button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .payment-btn button:hover {
+            background-color: #218838;
+        }
+        .quantity{
+            margin-left: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Payment Page</h2>
+
+        <div class="address">
+            <h3>Shipping Address</h3>
+            <p>{{address.fullname}}</p>
+            <p>{{address.flat}}</p>
+            <p>{{address.city}}</p>
+        </div>
+
+        <div class="items">
+            <h3>Order Summary</h3>
+            {{#each products}}
+            <div class="item">
+                <span>Product {{this.product.name}}</span>
+                <span class="quantity">Quantity: {{this.quantity}}</span>
+                <span>{{this.price}}</span>
+            </div>
+            {{/each}}
+            
+        </div>
+
+        <div class="total">
+            <h3>Total: {{amount}}</h3>
+        </div>
+
+        <div class="payment-btn">
+           <a href="/proceedToPay/{{address._id}}?amount={{amount}}"> <button >Proceed to Pay {{amount}}</button></a>
+        </div>
+    </div>
+
+</body>
+</html>

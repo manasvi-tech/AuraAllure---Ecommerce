@@ -371,12 +371,11 @@
 
         .product-info-quantity {
             display: flex;
-            margin-top: 10px;
 
         }
 
         .product-info-quantity button {
-            padding: 10px;
+            padding: 7px;
             font-size: 16px;
             cursor: pointer;
         }
@@ -413,6 +412,7 @@
         .buttons {
             display: flex;
             flex-wrap: wrap;
+            align-items: end;
         }
 
         .btn {
@@ -470,15 +470,18 @@
                 
                 <form action="/buy/{{product._id}}" method="POST">
                     <div class="product-info-quantity">
-                        <button type="button" id="decrease">-</button>
+                        <button type="button" id="decrease" style="border: 0.5px solid gray;"> -</button>
                         <input type="number" name="quantity" id="quantity" value="1" min="1"
                             placeholder="{{product.quantity}}">
-                        <button type="button" id="increase">+</button>
+                        <button type="button" id="increase" style="border: 0.5px solid gray;">+</button>
                     </div>
-                    <button class="btn btn-primary" type="submit" id="buy">
+                    <button class="btn btn-success" type="submit" id="buy">
                         Add to Cart
                     </button>
                 </form>
+                <a href="/addProductWish/{{_id}}"><button class="btn btn-danger" type="submit" id="buy">
+                        Add to Wishlist
+                    </button></a>
             </div>
             {{#if isAdmin}}
             <div class="buttons">

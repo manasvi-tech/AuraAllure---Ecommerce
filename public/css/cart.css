@@ -122,3 +122,7 @@ span{
 .total>a{
     width: 100%;
 }
+
+#increase, #decrease{
+    padding: 4px 9px;
+}

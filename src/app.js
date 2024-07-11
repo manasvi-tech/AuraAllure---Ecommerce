@@ -14,6 +14,7 @@ const jwt = require('jsonwebtoken');
 const stripe = require('stripe').Stripe(process.env.STRIPE_PRIVATE_KEY)
 require("./db/conn");
 const Query = require("./models/query");
+const OrderHistory = require("./models/order");
 const User = require("./models/User");
 const Address = require("./models/Address")
 const methodOverride = require("method-override");  // DELETE AND UPDATE REQUEST CANT BE MADE DIRECTLY THUS THIS
@@ -148,7 +149,8 @@ app.post('/register', async (req, res) => {
 
             console.log(token);
             const registered = await registerUser.save();
-            res.status(200).send("Registration successful!. Please login now");
+            
+            res.redirect('/register');
 
         }
 
@@ -220,25 +222,14 @@ app.get('/logout', auth, async (req, res) => {
 app.get('/cart', auth, async (req, res) => {
     try {
         const user = req.user;
-    
-        async function productWithQuantity(cartItem) {
-            let obj = {
-                product: await Product.findOne({ _id: cartItem.product }),
-                quantity: cartItem.quantity
-            };
-            return obj;
-        }
-    
-        const cartProducts = await Cart.find({ user: user._id });
-        const productsWithQuantity = [];
-    
-        for (const cartItem of cartProducts) {
-            const product = await productWithQuantity(cartItem);
-            productsWithQuantity.push(product);
-        } //because Array.map doesnt work with asynchronous things
-    
-        // console.log(productsWithQuantity);
-    
+
+        const cartProducts = await Cart.find({ user: user._id }).populate('product')
+
+        const productsWithQuantity = cartProducts.map(cartItem => ({
+            product: cartItem.product,
+            quantity: cartItem.quantity
+        }));
+
         res.render('cart', {
             products: productsWithQuantity
         });
@@ -265,40 +256,15 @@ app.post('/buy/:id', auth, async (req, res) => {
                 user: user._id
             })
             await registerCart.save();
+            await user.save();
 
-        } else {
-            return res.status(400).send('Product already added to cart');
         }
 
-        // Save the updated user
-        await user.save();
-        
-        async function productWithQuantity(cartItem) {
-            let obj = {
-                product: await Product.findOne({ _id: cartItem.product }),
-                quantity: cartItem.quantity
-            };
-            return obj;
-        }
-    
-        const cartProducts = await Cart.find({ user: user._id });
-        const productsWithQuantity = [];
-    
-        for (const cartItem of cartProducts) {
-            const product = await productWithQuantity(cartItem);
-            productsWithQuantity.push(product);
-        } //because Array.map doesnt work with asynchronous things
-    
-        // console.log(productsWithQuantity);
-    
-        res.render('cart', {
-            products: productsWithQuantity
-        });
+        res.redirect('/cart')
 
     } catch (err) {
         res.status(400).send('account-details')
     }
-
 })
 
 app.get('/removeFromCart/:id', auth, async (req, res) => {
@@ -306,7 +272,7 @@ app.get('/removeFromCart/:id', auth, async (req, res) => {
         const user = req.user;
         const itemid = req.params.id;
         console.log("removing from cart")
-        const product = await Cart.findOne({product:itemid});
+        const product = await Cart.findOne({ product: itemid });
 
         if (product) {
             const deletedProduct = await Cart.findOneAndDelete({ _id: product._id });
@@ -315,58 +281,53 @@ app.get('/removeFromCart/:id', auth, async (req, res) => {
             console.log("Product not found");
         }
 
-        console.log("saved");
-        async function productWithQuantity(cartItem) {
-            let obj = {
-                product: await Product.findOne({ _id: cartItem.product }),
-                quantity: cartItem.quantity
-            };
-            // console.log(obj)
-            return obj;
+        const index = user.products.indexOf(itemid);
+        if (index > -1) {
+            user.products.splice(index, 1);
+            console.log("product removed")
         }
-    
-        const cartProducts = await Cart.find({ user: user._id });
-        // console.log(cartProducts);
-        const productsWithQuantity = [];
-    
-        for (const cartItem of cartProducts) {
-            const product = await productWithQuantity(cartItem);
-            productsWithQuantity.push(product);
-        } //because Array.map doesnt work with asynchronous things
-    
-        // console.log(productsWithQuantity);
-    
-        res.render('cart', {
-            products: productsWithQuantity
-        });       
+        await user.save();
 
+        res.redirect('/cart');
 
     } catch (err) {
         res.status(400).send(err)
     }
 });
 
+app.get('/increaseProduct/:id', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const itemId = req.params.id;
+        const product = await Cart.findOne({ product: itemId });
+        product.quantity = Number(product.quantity) + Number(1);
+        await product.save();
+        console.log("added");
 
-// app.get('/checkout', auth, async (req, res) => {
-//     try {
-//         const user = req.user;
-//         const = new Address({
-//             firstname: req.body.firstname,
-//             lastname: req.body.lastname,
-//             email: req.body.email,
-//             gender: req.body.gender,
-//             password: req.body.password,
-//             cpass: req.body.cpass,
-//             isAdmin: false,
-//             products: [],
-//             orderHistory: [],
-//             wishlist: []
-//         });
+        res.redirect('/cart');
 
-//     } catch (err) {
+    } catch (err) {
+        res.status(400).send(err);
+    }
 
-//     }
-// })
+
+
+})
+app.get('/decreaseProduct/:id', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const itemId = req.params.id;
+        const product = await Cart.findOne({ product: itemId });
+        product.quantity = Number(product.quantity) - Number(1);
+        await product.save()
+        console.log("added");
+
+        res.redirect('/cart');
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
 
 app.post('/checkout', auth, async (req, res) => {
     try {
@@ -384,7 +345,6 @@ app.post('/checkout', auth, async (req, res) => {
 
     }
 })
-
 
 
 
@@ -420,10 +380,7 @@ app.post('/newProduct', async (req, res) => {
         } else {
             const added = await registerProduct.save();
             console.log("Product added")
-            const products = await Product.find().limit(6);
-            res.status(200).render('index', {
-                products: products
-            });
+            res.redirect('/');
         }
 
     } catch (err) {
@@ -467,10 +424,7 @@ app.post('/editItem/:id', async (req, res) => {
             console.log("Product updated successfully");
         }
 
-        const products = await Product.find().limit(6);
-        res.render('index', {
-            products: products
-        })
+        res.redirect('/');
 
     } catch (err) {
         res.status(400).send(err);
@@ -494,7 +448,6 @@ app.get('/deleteAdmin/:id', async (req, res) => {
         res.status(400).send(err);
     }
 
-
 });
 
 app.delete('/deleteItem/:id', async (req, res) => {
@@ -502,10 +455,9 @@ app.delete('/deleteItem/:id', async (req, res) => {
         const itemId = req.params.id;
         const result = await Product.findByIdAndDelete(itemId)
         if (!result) console.log("product isnt found");
-        const products = await Product.find().limit(6);
-        res.render('index', {
-            products: products
-        })
+        
+        res.redirect('/');
+
     } catch (err) {
         res.status(400).send(err);
     }
@@ -543,7 +495,8 @@ app.delete('/deleteUserAdmin/:id', async (req, res) => {
         const result = await User.findByIdAndDelete(itemId);
         if (!result) console.log("user wasnt found")
 
-        res.render('account-details')
+        res.redirect('/');
+
     } catch (err) {
         res.status(400).send(err);
     }
@@ -554,11 +507,7 @@ app.delete('/deleteUserAdmin/:id', async (req, res) => {
 app.get('/wishlist', auth, async (req, res) => {
     try {
         const user = req.user;
-        // const wishList = user.wishList;
         const wishListItems = await Product.find({ _id: { $in: user.wishList } });
-        console.log(wishListItems);
-
-
 
         res.render('wishlist', {
             products: wishListItems
@@ -573,7 +522,7 @@ app.get('/addProductWish/:id', auth, async (req, res) => {
     try {
         const user = req.user;
         const itemId = req.params.id;
-        console.log(itemId)
+        // console.log(itemId)
 
         const product = await Product.findOne({ _id: itemId });
 
@@ -584,11 +533,7 @@ app.get('/addProductWish/:id', auth, async (req, res) => {
             user.wishList.push(product._id);
             console.log("Pushed")
         }
-        const wishListItems = await Product.find({ _id: { $in: user.wishList } });
-        console.log(wishListItems)
-        res.render('wishlist', {
-            products: wishListItems
-        })
+        res.redirect('/wishlist');
 
         await user.save();
 
@@ -609,10 +554,8 @@ app.get('/removeFromWishlist/:id', auth, async (req, res) => {
         }
         await user.save();
 
-        const products = await Product.find({ _id: { $in: user.wishList } });
-        res.render('wishlist', {
-            products: products
-        })
+        res.redirect('/wishlist');
+
     } catch (err) {
         res.status(400).send(err);
     }
@@ -624,7 +567,7 @@ app.get('/addressPage', auth, async (req, res) => {
     try {
         const user = req.user;
         const address = await Address.find({ _id: { $in: user.address } })
-        console.log(address);
+        // console.log(address);
         res.render('addressPage', {
             address: address
         })
@@ -666,10 +609,9 @@ app.post('/addAddress', auth, async (req, res) => {
             // console.log("pushed")
         }
         await user.save();
+        
+        res.redirect('/addressPage');
 
-        res.render('account-details', {
-            name: user.firstname
-        });
     } catch (err) {
         res.status(500).send("An error occurred while saving the address");
     }
@@ -689,17 +631,11 @@ app.delete('/deleteAddress/:id', auth, async (req, res) => {
             console.log("product removed")
         }
 
-        const address = await Address.find({ _id: { $in: user.address } });
-        res.render('addressPage', {
-            address: address
-        })
+        res.redirect('/addressPage');
 
     } catch (err) {
         res.status(400).send(err);
     }
-
-
-
 })
 
 //search functionalities
@@ -750,9 +686,148 @@ app.post('/filters/:item', async (req, res) => {
     })
 });
 
-// payment optionss
+
+//payment and order history
+
+app.get('/payment/:id', auth, async (req, res) => {
+    try {
+        const addressId = req.params.id;
+        const amount = req.query.amount;
+        const address = await Address.findOne({ _id: addressId });
+        const user = req.user;
+
+        const cartProducts = await Cart.find({ user: user._id }).populate('product')
+
+        const productsWithQuantity = cartProducts.map(cartItem => ({
+            product: cartItem.product,
+            quantity: cartItem.quantity
+        }));
+
+        res.render('payment', {
+            amount: amount,
+            address: address,
+            products: productsWithQuantity
+        })
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+})
+
+app.post('/payment', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const amount = req.query.amount;
+        const address = req.body;
+
+        const registerAddress = new Address({
+            fullname: address.fullname,
+            mnumber: address.mnumber,
+            pincode: address.pincode,
+            flat: address.flat,
+            area: address.area,
+            city: address.city
+        });
+
+        console.log("made");
+
+        const savedAddress = await registerAddress.save();
+        console.log(savedAddress);
+
+        // async function productWithQuantity(cartItem) {
+        //     let obj = {
+        //         product: await Product.findOne({ _id: cartItem.product }).select('name'),
+        //         quantity: cartItem.quantity
+        //     };
+        //     return obj;
+        // }
+
+        // const cartProducts = await Cart.find({ user: user._id });
+        // const productsWithQuantity = [];
+
+        // for (const cartItem of cartProducts) {
+        //     const product = await productWithQuantity(cartItem);
+        //     productsWithQuantity.push(product);
+        // }
+
+        const cartProducts = await Cart.find({ user: user._id }).populate('product')
+
+        const productsWithQuantity = cartProducts.map(cartItem => ({
+            product: cartItem.product,
+            quantity: cartItem.quantity
+        }));
+
+        res.render('payment', {
+            amount: amount,
+            address: savedAddress, // Pass address as an object
+            products: productsWithQuantity
+        });
+
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+app.get('/proceedToPay/:id', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const amount = req.query.amount;
+        const addressid = req.params.id;
+
+        const address = await Address.findOne({ _id: addressid });
+
+        const cartProducts = await Cart.find({ user: user._id }).populate('product');
+
+        const productsWithQuantity = cartProducts.map(cartItem => ({
+            product: cartItem.product,
+            quantity: cartItem.quantity
+        }));
+
+        const registerOrder = new OrderHistory({
+            products: productsWithQuantity,
+            user: user._id,
+            address: address._id,
+            amount: amount,
+            date: Date.now()
+        })
+
+        await registerOrder.save();
+        console.log("saved address")
+        const deleteCart = await Cart.deleteMany({ user: user._id });
+
+        if (!user.orderHistory.includes()) {
+            user.orderHistory.push(registerOrder._id);
+            console.log("Done")
+        }
+
+        const products = await Product.find().limit(6);
+        // console.log(products);
+        res.render('index', {
+            products: products
+        })
 
 
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+app.get('/orderHistory', auth, async (req, res) => {
+    const user = req.user;
+    const orders = user.orderHistory;
+    console.log("Starting")
+
+    const orderedProducts = await OrderHistory.find({ user: user._id }).populate({
+        path: 'products.product'
+    }).populate('address');
+    // console.log(orderedProducts);
+
+    res.render('orderHistory', {
+        orders: orderedProducts,
+        username: user.firstname
+    })
+})
 
 app.listen(port, () => {
     console.log('Connection established on port 3000');

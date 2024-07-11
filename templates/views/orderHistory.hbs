@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>header}}
+    <style>
+        .content{
+            min-height: 75vh;
+        }
+        h1 {
+            font-family: "Playwrite NZ", cursive;
+            font-size: 2.4rem;
+            width: 100vw;
+            margin-left: 4rem;
+            margin-top: 2rem;
+        }
+
+        .date,
+        .amount,
+        .address {
+            padding: 1rem 0;
+        }
+
+        p {
+            margin: 0 4px;
+        }
+
+        .heading {
+            font-weight: bold;
+        }
+
+        .order {
+            border: 0.5px solid gray;
+            margin: 2rem 4rem;
+            border-radius: 9px;
+        }
+
+        .order-detail {
+            background-color: #a6bada;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4rem;
+        }
+
+        .productInfo {
+            display: flex;
+            max-width: 100vw;
+            max-height: 25vh;
+            overflow: hidden;
+            border: 0.5px solid gray;
+            border-radius: 9px;
+        }
+
+        img {
+            max-height: inherit;
+            width: 18rem;
+        }
+
+        .product-image {
+            flex: 1;
+
+        }
+
+        .no-order {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .no-order>button {
+            background-color: #212A2F;
+            border: 1px solid #212A2F;
+            padding: 1rem 2rem;
+            margin: 2rem;
+            font-size: 1.3rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            flex: 3;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 5vw;
+        }
+
+        .product-quantity {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            font-size: 2rem;
+            align-items: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    {{> navbar}}
+    <div class="content">
+        <h1>Welcome, {{username}}</h1>
+
+        {{#if orders}}
+        {{#each orders}}
+        <div class="order">
+            <div class="order-detail">
+                <div class="date">
+                    <p class="heading">ORDER PLACED</p>
+                    <p class="order-date">{{date}}</p>
+                </div>
+                <div class="amount">
+                    <p class="heading">AMOUNT</p>
+                    <p>{{amount}}</p>
+                </div>
+                <div class="address">
+                    <p class="heading">DELIVERED TO</p>
+                    <p>{{address.fullname}}, {{address.flat}}, {{address.city}}</p>
+                </div>
+            </div>
+            <div class="products">
+                {{#each products}}
+                <div class="productInfo">
+                    <div class="product-image">
+                        <img src="{{product.imageUrl}}" alt="">
+                    </div>
+                    <a href="/productDetails/{{product._id}}">
+                        <div class="product-info">
+                            <h3>{{product.name}}</h3>
+                            <p style="color: red;">Rs. {{product.price}}</p>
+                        </div>
+                    </a>
+                    <div class="product-quantity">
+                        <p>QUANTITY : {{quantity}}</p>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="no-order">
+        <h2>Uh-oh, You haven't shopped yet</h2>
+        <button class="btn btn-primary">Shop Now</button>
+    </div>
+    {{/if}}
+
+    </div>
+    {{>footer}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderDates = document.querySelectorAll('.order-date');
+            orderDates.forEach(function (dateElement) {
+                const date = new Date(dateElement.textContent);
+                dateElement.textContent = date.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
