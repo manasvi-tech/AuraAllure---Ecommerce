@@ -77,6 +77,36 @@
             font-size: 1.3rem;
         }
 
+        @media(max-width:768px){
+            .content{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .order-detail{
+                flex-direction: column;
+                padding: 0 3px;
+            }
+
+            .date, .amount, .address{
+                padding: 3px 3px;
+                display: flex;
+            }
+            .product-info{
+                padding: 0 1vw;
+            }
+
+            .order{
+                margin: 0.5rem 1rem;
+            }
+            
+            img{
+                width: 13rem;
+            }
+           
+        }
+
         a {
             text-decoration: none;
             color: black;
@@ -89,7 +119,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 0 5vw;
+          
         }
 
         .product-quantity {
@@ -118,7 +148,7 @@
                 </div>
                 <div class="amount">
                     <p class="heading">AMOUNT</p>
-                    <p>{{amount}}</p>
+                    <p>Rs. {{amount}}</p>
                 </div>
                 <div class="address">
                     <p class="heading">DELIVERED TO</p>

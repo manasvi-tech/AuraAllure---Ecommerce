@@ -55,16 +55,38 @@
     }
 
     @media(max-width: 768px) {
-        .img-container img {
-            max-width: 8rem;
-            max-height: 20rem;
+        .img-container {
+            width: 100%;;
+            max-height: 12rem;
             margin: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
         }
 
+        .column>h3{
+            font-size: 1.2rem;
+        }
+        .price{
+            margin-bottom: 0;
+        }
         .column {
-            max-width: 8rem;
+            max-width: 14rem;
+            height: 23rem;
+        }
+        .img-container img{
+            overflow: visible;
+        }
+
+        .fa-star{
+            font-size: 1rem;
+        }
+        .fa-heart{
+            font-size: 1.2rem;
         }
     }
+
 </style>
 <div class="column">
     <div class="img-container">

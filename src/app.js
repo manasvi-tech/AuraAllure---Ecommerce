@@ -150,7 +150,7 @@ app.post('/register', async (req, res) => {
             console.log(token);
             const registered = await registerUser.save();
             
-            res.redirect('/register');
+            res.redirect('/');
 
         }
 
@@ -523,6 +523,7 @@ app.get('/addProductWish/:id', auth, async (req, res) => {
         const user = req.user;
         const itemId = req.params.id;
         // console.log(itemId)
+        console.log("in add produ")
 
         const product = await Product.findOne({ _id: itemId });
 
@@ -730,27 +731,10 @@ app.post('/payment', auth, async (req, res) => {
             city: address.city
         });
 
-        console.log("made");
-
         const savedAddress = await registerAddress.save();
-        console.log(savedAddress);
-
-        // async function productWithQuantity(cartItem) {
-        //     let obj = {
-        //         product: await Product.findOne({ _id: cartItem.product }).select('name'),
-        //         quantity: cartItem.quantity
-        //     };
-        //     return obj;
-        // }
-
-        // const cartProducts = await Cart.find({ user: user._id });
-        // const productsWithQuantity = [];
-
-        // for (const cartItem of cartProducts) {
-        //     const product = await productWithQuantity(cartItem);
-        //     productsWithQuantity.push(product);
-        // }
-
+        
+        user.address.push(savedAddress._id);
+        await user.save();
         const cartProducts = await Cart.find({ user: user._id }).populate('product')
 
         const productsWithQuantity = cartProducts.map(cartItem => ({
@@ -800,6 +784,8 @@ app.get('/proceedToPay/:id', auth, async (req, res) => {
             user.orderHistory.push(registerOrder._id);
             console.log("Done")
         }
+
+        await user.save();
 
         const products = await Product.find().limit(6);
         // console.log(products);

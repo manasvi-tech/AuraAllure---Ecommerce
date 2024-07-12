@@ -8,15 +8,19 @@
 
 <body>
     {{>navbar}}
+    {{#if searchedItem}}
     <div class="filters-shortcut" style="width:100vw; padding-left:70vw;background-color:blanchedalmond">
-        <div style="font-size: 1.5rem;">Filters<span style="margin-left:20px"><a><i
-                        class="fa-solid fa-chevron-up"></i></a></span></div>
-        {{!-- <span><a><i class="fa-solid fa-chevron-up"></i></a></span> --}}
+        <div style="font-size: 1.5rem;">Filters
+            <span style="margin-left:20px">
+                <button class="dropdown" onclick="toggleFilter()"><i class="fa-solid fa-chevron-up"></i></button>
+            </span>
+        </div>
     </div>
-    
+    {{/if}}
+
     <div class="products-page">
         {{#if searchedItem}}
-        <div class="filter">
+        <div class="filter" id="filter">
             <form action="/filters/{{searchedItem}}" method="POST">
                 <!-- Product Type Filter -->
                 <div class="filter-group">
@@ -42,7 +46,6 @@
                 <button class="apply" type="submit"> Apply Filters </button>
             </form>
         </div>
-
         {{/if}}
         <div class="allproducts">
             {{#if products.length}}
@@ -67,6 +70,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
+    <script>
+        function toggleFilter() {
+            var filter = document.getElementById("filter");
+            if (filter.classList.contains("show-filter")) {
+                filter.classList.remove("show-filter");
+            } else {
+                filter.classList.add("show-filter");
+            }
+        }
+    </script>
+
 </body>
 
 </html>

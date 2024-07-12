@@ -16,7 +16,7 @@
 .filter{
     background-color: blanchedalmond;
     flex: 1;
-    width: 100vh;
+    width: 100%;
     padding: 6.5rem  3rem 0 3rem;
 }
 
@@ -78,24 +78,39 @@ input{
     .filters-shortcut{
         display: block;
     }
-    .filter{
-        display: none;
-    }
-
     .allproducts{
         padding: 1rem 2rem 1rem 2rem;
 
-
     }
-
+    .products-page{
+        display: flex;
+        flex-direction: column;
+    }
+    .filter-group .range-inputs{
+        flex-direction: column;
+    }
+    input{
+        margin-bottom: 4px;
+    }
+    .filter{
+        padding: 2rem;
+        display: none;
+    }
+    .show-filter {
+        display: block !important;
+    }
+    
 }
-
-@media (min-width:768px){
+@media(min-width:768px){
     .filters-shortcut{
         display: none;
     }
 }
 
+.dropdown{
+    background-color: transparent;
+    border: 0;
+}
 .empty{
     height: inherit;
     width: 100%;

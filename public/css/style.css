@@ -113,7 +113,14 @@ p{
 .row, .carousel-inner{
     height: fit-content;
     max-height : 55vh
+}
 
+@media(max-width:768px){
+    .row, .carousel-inner{
+        height: fit-content;
+        max-height : 29vh;
+        
+    }
     
 }
 
@@ -245,6 +252,12 @@ p{
     }
     #second-footer, #first-footer{
         display: none;
+    }
+    .right-nav ul{
+        gap: 0px;
+    }
+    .nav-link{
+        padding: .5rem 0.5rem;
     }
   }
 

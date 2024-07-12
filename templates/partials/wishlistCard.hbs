@@ -5,7 +5,7 @@
         padding-bottom: 1rem;
         padding-right: 1rem;
         border: 1px solid black;
-        border-radius: 3%;
+        border-radius: 3px;
         width: 18rem;
         height: 36rem;
     }
@@ -26,6 +26,7 @@
         /* 
         Ensure the image covers the container */
     }
+
     .column>h3 {
         text-transform: uppercase;
     }
@@ -40,31 +41,39 @@
 
     @media(max-width: 768px) {
         .img-container img {
-            max-width: 8rem;
-            max-height: 20rem;
-            margin: 2px;
+            width: 85%;
+            overflow: visible;
         }
 
         .column {
-            max-width: 8rem;
+            max-width: 15rem;
+            max-height: 28rem;
+            padding: 1rem;
+        }
+
+        .img-container {
+            max-height: 16rem;
+            display: flex;
+
+            justify-content: center;
         }
     }
-    
-    .wish{
-        font-size:1.1rem;
-        padding:0.3rem 0.7rem;
-    }
-    .content{
-        min-height: 11rem;
+
+    .wish {
+        font-size: 1.1rem;
+        padding: 0.3rem 0.7rem;
     }
 
+    .content {
+        min-height: 11rem;
+    }
 </style>
 
 
 <div class="column">
     <div class="img-container">
         <img src="{{imageUrl}}" alt="Product Image">
-        <i class="fa-solid fa-heart heart-icon" onclick="toggleHeartBackground(event)"></i>
+
     </div>
     {{!-- {{brand}} --}}
     <a href="/productDetails/{{_id}}">
@@ -72,27 +81,29 @@
             <h3 class="limited-heading">{{name}}</h3>
             <p class="price" style="color:red">Rs. {{price}}</p>
         </div>
-        <div class ='remove'> 
+        <div class='remove'>
             {{!-- <a href=""><button class=" btn-success wish">Add to Cart</button></a> --}}
-            <a  class="buttona" href="/removeFromWishlist/{{_id}}"><button style="border-radius:8%" class="btn-danger wish">Remove from wishlist</button></a>
-            </div>
+            <a class="buttona" href="/removeFromWishlist/{{_id}}">
+                <button style="border-radius:3px" class="btn-danger wish">Remove from wishlist</button>
+            </a>
+        </div>
     </a>
 </div>
 
 <script>
-function limitWords(text, limit) {
-    const words = text.split(' ');
-    if (words.length > limit) {
-        return words.slice(0, limit).join(' ') + '...';
+    function limitWords(text, limit) {
+        const words = text.split(' ');
+        if (words.length > limit) {
+            return words.slice(0, limit).join(' ') + '...';
+        }
+        return text;
     }
-    return text;
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const headings = document.querySelectorAll('.limited-heading');
-    headings.forEach(heading => {
-        const limitedText = limitWords(heading.innerText, 5); // Adjust the limit as needed
-        heading.innerText = limitedText;
+    document.addEventListener('DOMContentLoaded', () => {
+        const headings = document.querySelectorAll('.limited-heading');
+        headings.forEach(heading => {
+            const limitedText = limitWords(heading.innerText, 5); // Adjust the limit as needed
+            heading.innerText = limitedText;
+        });
     });
-});
 </script>

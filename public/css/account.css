@@ -60,6 +60,8 @@
     color: black;
 }
 .option>a>h3{
+    display: flex;
+    align-items: center;
     font-family: "Playwrite NZ", cursive;
     font-weight: bold;
     margin-bottom: 2rem;
@@ -72,6 +74,9 @@ h3>.fa-solid, h3>.fa-regular{
 p{
     letter-spacing: 0.2rem ;
 }
+
+
+
 .option{
     padding: 3rem 2rem;
     border: 1px solid black;
@@ -81,6 +86,21 @@ p{
     box-shadow: 4px 4px 10px;
     /* background-color:rgb(235, 232, 228) */
 }
+
+
+@media(max-width:768px){
+    .option{
+        width: 43%;
+        padding: 1rem;
+
+    }
+    .options{
+        padding: 0rem;
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
 .option:hover {
     transform: scale(1.1); /* Increase the scale to 1.1 times the original size */
     transition: transform 0.3s ease; /* Smooth transition effect */
