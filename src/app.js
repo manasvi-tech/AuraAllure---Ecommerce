@@ -39,7 +39,7 @@ hbs.registerPartials(partialsPath);
 //Basic pages
 
 app.get('/', async (req, res) => {
-    const products = await Product.find().limit(6);
+    const products = await Product.find().limit(5);
     // console.log(products);
     res.render('index', {
         products: products
@@ -523,7 +523,7 @@ app.get('/addProductWish/:id', auth, async (req, res) => {
         const user = req.user;
         const itemId = req.params.id;
         // console.log(itemId)
-        console.log("in add produ")
+        // console.log("in add produ")
 
         const product = await Product.findOne({ _id: itemId });
 
@@ -532,14 +532,14 @@ app.get('/addProductWish/:id', auth, async (req, res) => {
         }
         if (!user.wishList.includes(itemId)) {
             user.wishList.push(product._id);
-            console.log("Pushed")
+            // console.log("Pushed")
         }
         res.redirect('/wishlist');
 
         await user.save();
 
     } catch (err) {
-        res.status(400).send(err);
+        console.log(err);
     }
 })
 
@@ -551,7 +551,7 @@ app.get('/removeFromWishlist/:id', auth, async (req, res) => {
         const index = user.wishList.indexOf(itemid);
         if (index > -1) {
             user.wishList.splice(index, 1);
-            console.log("product removed")
+            // console.log("product removed")
         }
         await user.save();
 
@@ -562,6 +562,22 @@ app.get('/removeFromWishlist/:id', auth, async (req, res) => {
     }
 
 })
+
+app.post('/wishlist/check', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const { productIds } = req.body;
+
+        // Filter the product IDs that are in the user's wishlist
+        const wishlistItems = productIds.filter(id => user.wishList.includes(id));
+
+        res.json(wishlistItems);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+});
+
+
 
 //address functionalities
 app.get('/addressPage', auth, async (req, res) => {
@@ -787,11 +803,7 @@ app.get('/proceedToPay/:id', auth, async (req, res) => {
 
         await user.save();
 
-        const products = await Product.find().limit(6);
-        // console.log(products);
-        res.render('index', {
-            products: products
-        })
+        res.redirect('/');
 
 
     } catch (err) {
