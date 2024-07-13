@@ -149,7 +149,7 @@ app.post('/register', async (req, res) => {
 
             console.log(token);
             const registered = await registerUser.save();
-            
+
             res.redirect('/');
 
         }
@@ -189,9 +189,7 @@ app.post('/log-in', async (req, res) => {
         const products = await Product.find().limit(6);
 
         if (isMatch) {
-            res.status(201).render("index", {
-                products: products
-            });
+            res.redirect('/');
         } else {
             res.send("Invalid details");
         }
@@ -455,7 +453,7 @@ app.delete('/deleteItem/:id', async (req, res) => {
         const itemId = req.params.id;
         const result = await Product.findByIdAndDelete(itemId)
         if (!result) console.log("product isnt found");
-        
+
         res.redirect('/');
 
     } catch (err) {
@@ -626,7 +624,7 @@ app.post('/addAddress', auth, async (req, res) => {
             // console.log("pushed")
         }
         await user.save();
-        
+
         res.redirect('/addressPage');
 
     } catch (err) {
@@ -674,6 +672,7 @@ app.get('/productSearch', async (req, res) => {
         res.status(400).render(err);
     }
 })
+
 
 app.post('/filters/:item', async (req, res) => {
     const search = req.params.item; // Access route parameter
@@ -748,7 +747,7 @@ app.post('/payment', auth, async (req, res) => {
         });
 
         const savedAddress = await registerAddress.save();
-        
+
         user.address.push(savedAddress._id);
         await user.save();
         const cartProducts = await Cart.find({ user: user._id }).populate('product')
