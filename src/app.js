@@ -11,7 +11,6 @@ const Product = require("./models/Product");
 const Cart = require("./models/Cart");
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-const stripe = require('stripe').Stripe(process.env.STRIPE_PRIVATE_KEY)
 require("./db/conn");
 const Query = require("./models/query");
 const OrderHistory = require("./models/order");
@@ -243,7 +242,7 @@ app.post('/buy/:id', auth, async (req, res) => {
         const user = req.user;
         const productId = req.params.id;
         const quantity = req.body.quantity;
-
+        console.log("reached in buy")
         if (!user.products.includes(productId)) {
 
             user.products.push(productId);
@@ -255,9 +254,9 @@ app.post('/buy/:id', auth, async (req, res) => {
             })
             await registerCart.save();
             await user.save();
-
+            console.log("added to cart")
         }
-
+        console.log("redirecting")
         res.redirect('/cart')
 
     } catch (err) {
@@ -300,7 +299,6 @@ app.get('/increaseProduct/:id', auth, async (req, res) => {
         const product = await Cart.findOne({ product: itemId });
         product.quantity = Number(product.quantity) + Number(1);
         await product.save();
-        console.log("added");
 
         res.redirect('/cart');
 
@@ -318,7 +316,7 @@ app.get('/decreaseProduct/:id', auth, async (req, res) => {
         const product = await Cart.findOne({ product: itemId });
         product.quantity = Number(product.quantity) - Number(1);
         await product.save()
-        console.log("added");
+
 
         res.redirect('/cart');
     } catch (err) {
@@ -777,6 +775,19 @@ app.get('/proceedToPay/:id', auth, async (req, res) => {
         const address = await Address.findOne({ _id: addressid });
 
         const cartProducts = await Cart.find({ user: user._id }).populate('product');
+        console.log(cartProducts)
+        for (const cartProduct of cartProducts) {
+            const productId = cartProduct.product._id;
+            const quantityInCart = cartProduct.quantity;
+
+            const product = await Product.findById(productId);
+
+            // Reduce the stock by the quantity in the cart
+            product.stock = Number(product.stock)-Number(quantityInCart);
+
+            await product.save();
+
+        }
 
         const productsWithQuantity = cartProducts.map(cartItem => ({
             product: cartItem.product,
@@ -802,7 +813,7 @@ app.get('/proceedToPay/:id', auth, async (req, res) => {
 
         await user.save();
 
-        res.redirect('/');
+        res.redirect('/orderHistory');
 
 
     } catch (err) {

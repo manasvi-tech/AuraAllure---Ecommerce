@@ -6,11 +6,12 @@
     <style>
         .buttons {
             display: flex;
-            margin-top: 2rem;  
+            margin-top: 2rem;
         }
 
-        .btn-success , .btn-danger{
-            background-color:#212a2f;
+        .btn-success,
+        .btn-danger {
+            background-color: #212a2f;
             border: 1px solid #212a2f;
         }
 
@@ -364,7 +365,7 @@
             margin: 0 auto;
         }
 
-         @media(max-width:768px) {
+        @media(max-width:768px) {
             .product-details {
                 padding: 0;
             }
@@ -438,7 +439,10 @@
             margin-bottom: 1rem;
         }
 
-       
+        .not-available {
+            display: none;
+
+        }
     </style>
 </head>
 
@@ -462,25 +466,35 @@
                 <p style="color:#212a2f">{{product.description}}</p>
             </div>
 
-            {{#if product.quantity}}
+            {{#if product.stock}}
+
             {{else}}
             <div class="stock" style="color: red; font-size: medium">
                 OUT OF STOCK
             </div>
             {{/if}}
-            <div class="buttons">
 
+            <div id="not-available" class="not-available" style="color: red; font-size: medium">
+                NOT AVAILABLE
+            </div>
+            <div class="buttons">
                 <form action="/buy/{{product._id}}" method="POST">
                     <div class="product-info-quantity">
-                        <button type="button" id="decrease" style="border: 0.5px solid gray;"> -</button>
+                        <button type="button" id="decrease" style="border: 0.5px solid gray;"
+                            onclick="adjustQuantity(-1, {{product.stock}})">-</button>
                         <input type="number" name="quantity" id="quantity" value="1" min="1"
-                            placeholder="{{product.quantity}}">
-                        <button type="button" id="increase" style="border: 0.5px solid gray;">+</button>
+                            oninput="checkQuantity({{product.stock}})">
+                        <button type="button" id="increase" style="border: 0.5px solid gray;"
+                            onclick="adjustQuantity(1, {{product.stock}})">+</button>
+                    </div>
+                    <div id="not-available" class="not-available">
+                        Not available
                     </div>
                     <button class="btn btn-success" type="submit" id="buy">
                         Add to Cart
                     </button>
                 </form>
+
                 <a href="/addProductWish/{{product._id}}"><button class="btn btn-danger" type="submit" id="buy">
                         Add to Wishlist
                     </button></a>
@@ -518,7 +532,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             // Set up increase and decrease buttons
-            document.getElementById('decrease').addEventListener('click', function () {
+            {{!-- document.getElementById('decrease').addEventListener('click', function () {
                 var quantity = document.getElementById('quantity');
                 var value = parseInt(quantity.value, 10);
                 if (value > 1) {
@@ -530,7 +544,7 @@
                 var quantity = document.getElementById('quantity');
                 var value = parseInt(quantity.value, 10);
                 quantity.value = value + 1;
-            });
+            }); --}}
 
             // Limit words in headings
             const headings = document.querySelectorAll('.limited-heading');
@@ -552,6 +566,39 @@
                     }
                 });
             });
+        });
+
+        function checkQuantity(stock) {
+            const quantityInput = document.getElementById('quantity');
+            const quantity = parseInt(quantityInput.value);
+            const notAvailableDiv = document.getElementById('not-available');
+            const buyButton = document.getElementById('buy');
+
+            if (quantity > stock) {
+                notAvailableDiv.style.display = 'block';
+                buyButton.disabled = true;
+            } else {
+                notAvailableDiv.style.display = 'none';
+                buyButton.disabled = false;
+            }
+        }
+
+        function adjustQuantity(change, stock) {
+            const quantityInput = document.getElementById('quantity');
+            let quantity = parseInt(quantityInput.value);
+            quantity += change;
+
+            if (quantity < 1) {
+                quantity = 1;
+            }
+
+            quantityInput.value = quantity;
+            checkQuantity(stock);
+        }
+
+        // Initialize quantity check on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            checkQuantity({{ product.stock }});
         });
     </script>
 

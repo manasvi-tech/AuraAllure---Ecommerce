@@ -44,10 +44,11 @@
 
                                 <a href="/decreaseProduct/{{product._id}}"><button type="button"
                                         id="decrease">-</button></a>
-                                <input type="number" class="quantity-input" value="{{quantity}}" min="1"
+                                <input type="number" class="quantity-input" value="{{quantity}}" min="1" max="{{product.stock}}"
                                     data-price="{{price}}" placeholder="" readonly>
                                 <a href="/increaseProduct/{{product._id}}"><button type="button"
                                         id="increase">+</button></a>
+                                        
                             </div>
                         </div>
                     </div>

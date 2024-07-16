@@ -5,10 +5,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true,"Name of the product is required"]
   },
-  id: {
-    type: String,
-    required: [true,"Email of the product is required"]
-  },
   rating: {
     type: Number,
     required: false
@@ -49,7 +45,7 @@ const productSchema = new mongoose.Schema({
     }],
     required: false
   },
-  quantity:{
+  stock:{
     type:Number,
     required:[true,"Quantity is required"]
   }

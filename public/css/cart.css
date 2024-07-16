@@ -175,3 +175,7 @@ span{
 
     border: 0.5px solid gray;
 }
+.not-available {
+    display: none;
+
+}
