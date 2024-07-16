@@ -44,11 +44,12 @@
 
                                 <a href="/decreaseProduct/{{product._id}}"><button type="button"
                                         id="decrease">-</button></a>
-                                <input type="number" class="quantity-input" value="{{quantity}}" min="1" max="{{product.stock}}"
-                                    data-price="{{price}}" placeholder="" readonly>
-                                <a href="/increaseProduct/{{product._id}}"><button type="button"
-                                        id="increase">+</button></a>
-                                        
+                                <input type="number" class="quantity-input" value="{{quantity}}" min="1"
+                                    max="{{product.stock}}" data-price="{{price}}" placeholder="" readonly>
+                                <a href="/increaseProduct/{{product._id}}" class="increase-link">
+                                    <button type="button" id="increase">+</button>
+                                </a>
+
                             </div>
                         </div>
                     </div>
@@ -117,6 +118,23 @@
                     input.addEventListener('change', calculateTotalPrice);
                 });
             });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const increaseButtons = document.querySelectorAll('.increase-link');
+
+            increaseButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    const input = this.previousElementSibling; // Assuming the input is just before the anchor
+                    const quantity = parseInt(input.value, 10);
+                    const stock = parseInt(input.getAttribute('max'), 10);
+
+                    if (quantity >= stock) {
+                        event.preventDefault(); // Prevent the anchor tag's default action
+                        alert('Quantity exceeds available stock');
+                    }
+                });
+            });
+        });
     </script>
 
 

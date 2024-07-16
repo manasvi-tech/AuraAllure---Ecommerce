@@ -242,7 +242,6 @@ app.post('/buy/:id', auth, async (req, res) => {
         const user = req.user;
         const productId = req.params.id;
         const quantity = req.body.quantity;
-        console.log("reached in buy")
         if (!user.products.includes(productId)) {
 
             user.products.push(productId);
@@ -254,7 +253,6 @@ app.post('/buy/:id', auth, async (req, res) => {
             })
             await registerCart.save();
             await user.save();
-            console.log("added to cart")
         }
         console.log("redirecting")
         res.redirect('/cart')
@@ -386,7 +384,7 @@ app.post('/newProduct', async (req, res) => {
 
 app.get('/editAdmin/:id', async (req, res) => {
     try {
-        // console.log("here")
+    
         const _id = req.params.id;
         const product = await Product.findOne({ _id: _id });
 
