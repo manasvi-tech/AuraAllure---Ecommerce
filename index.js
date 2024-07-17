@@ -167,12 +167,17 @@ app.post('/log-in', async (req, res) => {
         const password = req.body.password
 
         const userEmail = await User.findOne({ email: email });
+        if(!userEmail){
+            res.status(400).send("Please register");
+        }
         // console.log(userEmail);
         // res.send(userEmail);
 
         const isMatch = await bcrypt.compare(password, userEmail.password)
 
-        console.log(isMatch);
+        if(!isMatch){
+            res.status(400).send("Please enter the right credentials")
+        }
 
         const token = await userEmail.generateToken();
         console.log(token);
@@ -357,7 +362,6 @@ app.post('/newProduct', async (req, res) => {
 
     try {
         const registerProduct = new Product({
-            id: req.body.id,
             name: req.body.name,
             price: req.body.price,
             originalPrice: req.body.org_price,

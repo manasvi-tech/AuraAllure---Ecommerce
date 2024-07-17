@@ -455,6 +455,7 @@
             <h2 class="product-info-heading">{{product.name}}</h2>
             <h3>{{product.brand}}</h3>
             <h3 class="product-info-price">Rs. {{product.price}}</h3>
+            {{#if product.rating}}
             <div class="rating" data-rating="{{product.rating}}">
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
@@ -462,6 +463,10 @@
                 <i class="fa-regular fa-star"></i>
                 <i class="fa-regular fa-star"></i>
             </div>
+
+            {{else}}
+
+            {{/if}}
             <div class="product-info-description">
                 <p style="color:#212a2f">{{product.description}}</p>
             </div>
