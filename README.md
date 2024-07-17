@@ -18,7 +18,7 @@ Aura Allure is an eCommerce web application for beauty products. Users can brows
 1. Clone the repository
 
     ```sh
-    git clone https://github.com/YourUsername/AuraAllure.git
+    git clone https://github.com/manasvi-tech/AuraAllure---Ecommerce.git
     ```
 
 2. Install dependencies
@@ -33,6 +33,7 @@ Aura Allure is an eCommerce web application for beauty products. Users can brows
     PORT=3000
     MONGODB_URL=your_mongodb_connection_string
     JWT_SECRET=your_secret_key
+    DB_NAME=your_database_name
     ```
 
 4. Start the server
@@ -57,6 +58,7 @@ Aura Allure is an eCommerce web application for beauty products. Users can brows
 - `bcrypt` - Library for hashing passwords
 - `cookie-parser` - Middleware to parse cookies
 - `jsonwebtoken` - Library to work with JSON Web Tokens
+- `validator` - To validate the inputs like emailId
 - `method-override` - Middleware to use HTTP verbs such as PUT or DELETE in places where the client doesn't support it
 
 ## Functionalities
