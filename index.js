@@ -6,16 +6,16 @@ const port = process.env.PORT;
 const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require('bcrypt');
-const auth = require('./middleware/auth')
-const Product = require("./models/Product");
-const Cart = require("./models/Cart");
+const auth = require('./src/middleware/auth')
+const Product = require("./src/models/Product");
+const Cart = require("./src/models/Cart");
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-require("./db/conn");
-const Query = require("./models/query");
-const OrderHistory = require("./models/order");
-const User = require("./models/User");
-const Address = require("./models/Address")
+require("./src/db/conn");
+const Query = require("./src/models/query");
+const OrderHistory = require("./src/models/order");
+const User = require("./src/models/User");
+const Address = require("./src/models/Address")
 const methodOverride = require("method-override");  // DELETE AND UPDATE REQUEST CANT BE MADE DIRECTLY THUS THIS
 const { read } = require('fs');
 
