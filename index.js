@@ -24,9 +24,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })) // i want to get all the data of the form
 
-const staticPath = path.join(__dirname, "../public"); //CLIENT SIDE CODE IS HERE
-const templatePath = path.join(__dirname, "../templates/views");
-const partialsPath = path.join(__dirname, "../templates/partials");
+const staticPath = path.join(__dirname, "/public"); //CLIENT SIDE CODE IS HERE
+const templatePath = path.join(__dirname, "/templates/views");
+const partialsPath = path.join(__dirname, "/templates/partials");
 
 app.use(express.static(staticPath));
 app.engine('handlebars', engine());
