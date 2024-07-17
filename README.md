@@ -3,7 +3,7 @@
 Aura Allure is an eCommerce web application for beauty products. Users can browse products, add them to their cart or wishlist, and purchase them. The platform includes user authentication, order management, and an admin panel for managing products and orders.
 
 ## Live Hosting
-    ```sh
+    ```
     https://aura-allure-ecommere.vercel.app/
     ```
 
