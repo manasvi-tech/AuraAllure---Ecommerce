@@ -2,6 +2,11 @@
 
 Aura Allure is an eCommerce web application for beauty products. Users can browse products, add them to their cart or wishlist, and purchase them. The platform includes user authentication, order management, and an admin panel for managing products and orders.
 
+## Live Hosting
+    ```sh
+    https://aura-allure-ecommere.vercel.app/
+    ```
+
 ## Getting Started
 
 ### Prerequisites
@@ -59,14 +64,17 @@ Aura Allure is an eCommerce web application for beauty products. Users can brows
 
 - User authentication (signup, login, logout)
 - User authorization
+- Search products (search, navigate, filters)
 - Product management (add, edit, delete products)
 - Cart management (add, remove products from cart)
 - Wishlist management (add, remove products from wishlist)
 - Order management (place orders, view order history)
 - Address management (add new address, store address)
-- Admin panel for managing products and orders
+- Admin panel for managing products, orders and users
 
 ## Folder Structure
+
+```
 .
 ├── index.js
 ├── templates
@@ -130,14 +138,17 @@ Aura Allure is an eCommerce web application for beauty products. Users can brows
 │   │   └── indexlatest3.png
 ├── README.md
 
+```
+
 
 
 ## Demo
 
 ### Home Page
 
-![Home Page](Demo/home1.png)
-
+![Home Page1](Demo/home1.png)
+![Home Page2](Demo/home2.png)
+![Home Page3](Demo/home3.png)
 
 ### Product Page
 
@@ -169,7 +180,7 @@ Aura Allure is an eCommerce web application for beauty products. Users can brows
 
 ### Order History Page
 
-![Order History Page](path/to/orderhistorypage-screenshot.png)
+![Order History Page](Demo/orderHistory.png)
 
 ### Payment Page
 
