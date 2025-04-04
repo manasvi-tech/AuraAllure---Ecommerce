@@ -839,8 +839,10 @@ app.get('/orderHistory', auth, async (req, res) => {
     })
 })
 
-app.listen(port, () => {
-    console.log('Connection established on port 3000');
-})
 
+const server = app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+
+server.timeout = 300000; // Increase timeout to 5 minutes (300,000 ms)
 
